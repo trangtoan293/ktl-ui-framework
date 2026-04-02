@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-Portal | Feedback Components</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 300: '#93C5FD', 400: '#60A5FA', 500: '#3B82D4', 600: '#2563B0', 700: '#1E4D8C', 800: '#153666', 900: '#0C2340' },
+            success: { DEFAULT: '#22C55E', light: '#F0FDF4', dark: '#166534' },
+            warning: { DEFAULT: '#F59E0B', light: '#FFFBEB', dark: '#92400E' },
+            danger: { DEFAULT: '#EF4444', light: '#FEF2F2', dark: '#991B1B' },
+            info: { DEFAULT: '#3B82F6', light: '#EFF6FF', dark: '#1E40AF' },
+            ai: { purple: { 100: '#EDE9FE', 200: '#DDD6FE', 300: '#C4B5FD', 400: '#A78BFA', 500: '#8B5CF6', 600: '#7C3AED', 700: '#6D28D9', 800: '#5B21B6', 900: '#4C1D95' }}
+          },
+          fontFamily: { sans: ['"Be Vietnam Pro"', 'system-ui', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOutRight {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    @keyframes scaleIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes scaleOut {
+      from { transform: scale(1); opacity: 1; }
+      to { transform: scale(0.95); opacity: 0; }
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-25%); }
+    }
+    
+    .toast-enter { animation: slideInRight 0.3s ease-out forwards; }
+    .toast-exit { animation: slideOutRight 0.3s ease-in forwards; }
+    .modal-enter { animation: fadeIn 0.2s ease-out forwards; }
+    .modal-exit { animation: fadeOut 0.2s ease-in forwards; }
+    .modal-content-enter { animation: scaleIn 0.3s ease-out forwards; }
+    .modal-content-exit { animation: scaleOut 0.2s ease-in forwards; }
+    
+    .skeleton {
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    
+    .spinner {
+      animation: spin 1s linear infinite;
+    }
+    
+    .bounce-loader {
+      animation: bounce 0.6s infinite alternate;
+    }
+    
+    .glass {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(8px);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
+  
+  <!-- Toast Container -->
+  <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-3 w-full max-w-sm"></div>
+
+  <!-- Header -->
+  <header class="bg-primary-900 text-white py-6 px-8 sticky top-0 z-40 shadow-lg">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i data-lucide="message-square" class="w-8 h-8"></i>
+        <div>
+          <h1 class="text-2xl font-bold">Feedback Components</h1>
+          <p class="text-primary-200 text-sm">Toast, Modal, Loading States</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <a href="forms-framework.html" class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Forms</span>
+        </a>
+        <a href="data-display-framework.html" class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Data Display</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-8 py-12 space-y-16">
+
+    <!-- ==================== TOAST NOTIFICATIONS ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="bell" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Toast Notifications</h2>
+          <p class="text-body-md text-slate-500">Non-blocking feedback messages</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <!-- Toast Examples -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <!-- Success Toast -->
+          <div class="rounded-lg border border-success/30 bg-success/5 p-4 flex items-start gap-3">
+            <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center shrink-0">
+              <i data-lucide="check" class="w-4 h-4 text-white"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-medium text-slate-900">Thành công</p>
+              <p class="text-body-sm text-slate-600">Tài liệu đã được upload thành công.</p>
+            </div>
+            <button class="text-slate-400 hover:text-slate-600">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Error Toast -->
+          <div class="rounded-lg border border-danger/30 bg-danger/5 p-4 flex items-start gap-3">
+            <div class="w-8 h-8 bg-danger rounded-full flex items-center justify-center shrink-0">
+              <i data-lucide="alert-triangle" class="w-4 h-4 text-white"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-medium text-slate-900">Lỗi</p>
+              <p class="text-body-sm text-slate-600">Không thể kết nối đến server. Vui lòng thử lại.</p>
+            </div>
+            <button class="text-slate-400 hover:text-slate-600">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Warning Toast -->
+          <div class="rounded-lg border border-warning/30 bg-warning/5 p-4 flex items-start gap-3">
+            <div class="w-8 h-8 bg-warning rounded-full flex items-center justify-center shrink-0">
+              <i data-lucide="alert-circle" class="w-4 h-4 text-white"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-medium text-slate-900">Cảnh báo</p>
+              <p class="text-body-sm text-slate-600">File vượt quá kích thước giới hạn 50MB.</p>
+            </div>
+            <button class="text-slate-400 hover:text-slate-600">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Info Toast -->
+          <div class="rounded-lg border border-info/30 bg-info/5 p-4 flex items-start gap-3">
+            <div class="w-8 h-8 bg-info rounded-full flex items-center justify-center shrink-0">
+              <i data-lucide="info" class="w-4 h-4 text-white"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-medium text-slate-900">Thông tin</p>
+              <p class="text-body-sm text-slate-600">Phiên bản mới đã được cập nhật.</p>
+            </div>
+            <button class="text-slate-400 hover:text-slate-600">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Toast Action Buttons -->
+        <div class="flex flex-wrap gap-3">
+          <button onclick="showToast('success')" class="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-lg hover:bg-success-dark transition-colors">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            Success Toast
+          </button>
+          <button onclick="showToast('error')" class="flex items-center gap-2 px-4 py-2 bg-danger text-white rounded-lg hover:bg-danger-dark transition-colors">
+            <i data-lucide="x-circle" class="w-4 h-4"></i>
+            Error Toast
+          </button>
+          <button onclick="showToast('warning')" class="flex items-center gap-2 px-4 py-2 bg-warning text-white rounded-lg hover:bg-warning-dark transition-colors">
+            <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+            Warning Toast
+          </button>
+          <button onclick="showToast('info')" class="flex items-center gap-2 px-4 py-2 bg-info text-white rounded-lg hover:bg-info-dark transition-colors">
+            <i data-lucide="info" class="w-4 h-4"></i>
+            Info Toast
+          </button>
+          <button onclick="showToastWithAction()" class="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+            <i data-lucide="mouse-pointer" class="w-4 h-4"></i>
+            Toast with Action
+          </button>
+        </div>
+
+        <!-- Toast with Progress -->
+        <div class="mt-6 rounded-lg border border-slate-200 bg-white p-4">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center shrink-0">
+              <i data-lucide="upload" class="w-4 h-4 text-primary-600"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between mb-2">
+                <p class="font-medium text-slate-900">Đang upload...</p>
+                <span class="text-body-sm text-primary-600 font-medium">65%</span>
+              </div>
+              <div class="h-2 bg-slate-200 rounded-full overflow-hidden">
+                <div class="h-full bg-primary-600 rounded-full transition-all duration-300" style="width: 65%"></div>
+              </div>
+              <p class="text-body-sm text-slate-500 mt-1">Báo_cáo_Q1_2024.pdf • 2.4 MB</p>
+            </div>
+            <button class="text-slate-400 hover:text-danger transition-colors">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== MODAL / DIALOG ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="maximize-2" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Modal & Dialog</h2>
+          <p class="text-body-md text-slate-500">Overlay dialogs and confirmations</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <!-- Modal Triggers -->
+        <div class="flex flex-wrap gap-3 mb-8">
+          <button onclick="openModal('simple')" class="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+            <i data-lucide="square" class="w-4 h-4"></i>
+            Simple Modal
+          </button>
+          <button onclick="openModal('confirm')" class="flex items-center gap-2 px-4 py-2 bg-warning text-white rounded-lg hover:bg-warning-dark transition-colors">
+            <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+            Confirm Dialog
+          </button>
+          <button onclick="openModal('delete')" class="flex items-center gap-2 px-4 py-2 bg-danger text-white rounded-lg hover:bg-danger-dark transition-colors">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+            Delete Dialog
+          </button>
+          <button onclick="openModal('large')" class="flex items-center gap-2 px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors">
+            <i data-lucide="maximize" class="w-4 h-4"></i>
+            Large Modal
+          </button>
+          <button onclick="openModal('ai')" class="flex items-center gap-2 px-4 py-2 bg-ai-purple-600 text-white rounded-lg hover:bg-ai-purple-700 transition-colors">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            AI Modal
+          </button>
+        </div>
+
+        <!-- Modal Examples (shown inline) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Simple Modal -->
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <div class="bg-slate-100 px-4 py-2 text-body-sm font-medium text-slate-600">Simple Modal</div>
+            <div class="p-6">
+              <div class="bg-white rounded-lg shadow-lg border border-slate-200 max-w-sm mx-auto">
+                <div class="p-6">
+                  <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center shrink-0">
+                      <i data-lucide="info" class="w-5 h-5 text-primary-600"></i>
+                    </div>
+                    <div>
+                      <h3 class="text-h3 text-slate-900 mb-1">Thông báo</h3>
+                      <p class="text-body-md text-slate-600 mb-4">Tài liệu của bạn đã được lưu thành công. Bạn có muốn tiếp tục không?</p>
+                      <div class="flex gap-3">
+                        <button class="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700">Tiếp tục</button>
+                        <button class="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Hủy</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Confirm Delete -->
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <div class="bg-slate-100 px-4 py-2 text-body-sm font-medium text-slate-600">Confirm Delete</div>
+            <div class="p-6">
+              <div class="bg-white rounded-lg shadow-lg border border-slate-200 max-w-sm mx-auto">
+                <div class="p-6">
+                  <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 bg-danger/10 rounded-full flex items-center justify-center shrink-0">
+                      <i data-lucide="alert-triangle" class="w-5 h-5 text-danger"></i>
+                    </div>
+                    <div>
+                      <h3 class="text-h3 text-slate-900 mb-1">Xác nhận xóa</h3>
+                      <p class="text-body-md text-slate-600 mb-4">Bạn có chắc chắn muốn xóa tài liệu này? Hành động này không thể hoàn tác.</p>
+                      <div class="flex gap-3">
+                        <button class="flex-1 px-4 py-2 bg-danger text-white rounded-lg text-sm font-medium hover:bg-danger-dark">Xóa</button>
+                        <button class="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Hủy</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== LOADING STATES ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="loader-2" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Loading States</h2>
+          <p class="text-body-md text-slate-500">Skeleton, spinner, and progress indicators</p>
+        </div>
+      </div>
+
+      <!-- Spinners -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 mb-8">
+        <h3 class="text-h3 text-primary-900 mb-6">Spinners</h3>
+        <div class="flex flex-wrap items-center gap-8">
+          <!-- Default Spinner -->
+          <div class="flex flex-col items-center gap-2">
+            <i data-lucide="loader-2" class="w-8 h-8 text-primary-600 spinner"></i>
+            <span class="text-body-sm text-slate-500">Default</span>
+          </div>
+          
+          <!-- Large Spinner -->
+          <div class="flex flex-col items-center gap-2">
+            <i data-lucide="loader-2" class="w-12 h-12 text-primary-600 spinner"></i>
+            <span class="text-body-sm text-slate-500">Large</span>
+          </div>
+          
+          <!-- Dots -->
+          <div class="flex flex-col items-center gap-2">
+            <div class="flex gap-1">
+              <div class="w-2 h-2 bg-primary-600 rounded-full bounce-loader"></div>
+              <div class="w-2 h-2 bg-primary-600 rounded-full bounce-loader" style="animation-delay: 0.2s"></div>
+              <div class="w-2 h-2 bg-primary-600 rounded-full bounce-loader" style="animation-delay: 0.4s"></div>
+            </div>
+            <span class="text-body-sm text-slate-500">Dots</span>
+          </div>
+          
+          <!-- Ring -->
+          <div class="flex flex-col items-center gap-2">
+            <div class="w-8 h-8 border-2 border-primary-200 border-t-primary-600 rounded-full spinner"></div>
+            <span class="text-body-sm text-slate-500">Ring</span>
+          </div>
+
+          <!-- AI Loading -->
+          <div class="flex flex-col items-center gap-2">
+            <div class="w-12 h-12 bg-ai-purple-100 rounded-full flex items-center justify-center">
+              <i data-lucide="sparkles" class="w-6 h-6 text-ai-purple-600"></i>
+            </div>
+            <span class="text-body-sm text-slate-500">AI</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skeleton Loading -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 mb-8">
+        <h3 class="text-h3 text-primary-900 mb-6">Skeleton Loading</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Card Skeleton -->
+          <div class="border border-slate-200 rounded-xl p-4">
+            <p class="text-body-sm text-slate-500 mb-4">Card Skeleton</p>
+            <div class="bg-white rounded-lg border border-slate-200 p-5 space-y-4">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 skeleton rounded-lg"></div>
+                <div class="flex-1 space-y-2">
+                  <div class="h-4 skeleton rounded w-3/4"></div>
+                  <div class="h-3 skeleton rounded w-1/2"></div>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="h-3 skeleton rounded"></div>
+                <div class="h-3 skeleton rounded w-5/6"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- List Skeleton -->
+          <div class="border border-slate-200 rounded-xl p-4">
+            <p class="text-body-sm text-slate-500 mb-4">List Skeleton</p>
+            <div class="bg-white rounded-lg border border-slate-200 divide-y divide-slate-100">
+              <div class="p-4 flex items-center gap-4">
+                <div class="w-10 h-10 skeleton rounded-full"></div>
+                <div class="flex-1 space-y-2">
+                  <div class="h-3 skeleton rounded w-1/3"></div>
+                  <div class="h-2 skeleton rounded w-1/4"></div>
+                </div>
+              </div>
+              <div class="p-4 flex items-center gap-4">
+                <div class="w-10 h-10 skeleton rounded-full"></div>
+                <div class="flex-1 space-y-2">
+                  <div class="h-3 skeleton rounded w-2/5"></div>
+                  <div class="h-2 skeleton rounded w-1/4"></div>
+                </div>
+              </div>
+              <div class="p-4 flex items-center gap-4">
+                <div class="w-10 h-10 skeleton rounded-full"></div>
+                <div class="flex-1 space-y-2">
+                  <div class="h-3 skeleton rounded w-1/3"></div>
+                  <div class="h-2 skeleton rounded w-1/5"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table Skeleton -->
+          <div class="border border-slate-200 rounded-xl p-4 md:col-span-2">
+            <p class="text-body-sm text-slate-500 mb-4">Table Skeleton</p>
+            <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
+              <div class="border-b border-slate-200 bg-slate-50 p-4 grid grid-cols-4 gap-4">
+                <div class="h-4 skeleton rounded"></div>
+                <div class="h-4 skeleton rounded"></div>
+                <div class="h-4 skeleton rounded"></div>
+                <div class="h-4 skeleton rounded"></div>
+              </div>
+              <div class="divide-y divide-slate-100">
+                <div class="p-4 grid grid-cols-4 gap-4">
+                  <div class="h-3 skeleton rounded"></div>
+                  <div class="h-3 skeleton rounded"></div>
+                  <div class="h-3 skeleton rounded w-2/3"></div>
+                  <div class="h-3 skeleton rounded w-1/2"></div>
+                </div>
+                <div class="p-4 grid grid-cols-4 gap-4">
+                  <div class="h-3 skeleton rounded"></div>
+                  <div class="h-3 skeleton rounded"></div>
+                  <div class="h-3 skeleton rounded w-2/3"></div>
+                  <div class="h-3 skeleton rounded w-1/2"></div>
+                </div>
+                <div class="p-4 grid grid-cols-4 gap-4">
+                  <div class="h-3 skeleton rounded"></div>
+                  <div class="h-3 skeleton rounded"></div>
+                  <div class="h-3 skeleton rounded w-2/3"></div>
+                  <div class="h-3 skeleton rounded w-1/2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Indicators -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <h3 class="text-h3 text-primary-900 mb-6">Progress Indicators</h3>
+        
+        <div class="space-y-6">
+          <!-- Linear Progress -->
+          <div>
+            <div class="flex justify-between text-body-sm mb-2">
+              <span class="text-slate-700">Uploading files...</span>
+              <span class="text-primary-600 font-medium">75%</span>
+            </div>
+            <div class="h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div class="h-full bg-primary-600 rounded-full transition-all duration-500" style="width: 75%"></div>
+            </div>
+          </div>
+
+          <!-- Multi-step Progress -->
+          <div>
+            <div class="flex justify-between text-body-sm mb-3">
+              <span class="text-slate-700">Phân tích AI</span>
+              <span class="text-ai-purple-600 font-medium">Step 2/4</span>
+            </div>
+            <div class="flex gap-2">
+              <div class="flex-1 h-2 bg-success rounded-full"></div>
+              <div class="flex-1 h-2 bg-ai-purple-600 rounded-full relative overflow-hidden">
+                <div class="absolute inset-0 bg-white/30 animate-pulse"></div>
+              </div>
+              <div class="flex-1 h-2 bg-slate-200 rounded-full"></div>
+              <div class="flex-1 h-2 bg-slate-200 rounded-full"></div>
+            </div>
+            <div class="flex justify-between text-body-sm mt-2 text-slate-500">
+              <span>Upload</span>
+              <span class="text-ai-purple-600">Analysis</span>
+              <span>Review</span>
+              <span>Complete</span>
+            </div>
+          </div>
+
+          <!-- Circular Progress -->
+          <div class="flex items-center gap-8">
+            <div class="relative w-20 h-20">
+              <svg class="w-full h-full" viewBox="0 0 36 36">
+                <path class="text-slate-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"/>
+                <path class="text-primary-600" stroke-dasharray="65, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="text-lg font-semibold text-slate-900">65%</span>
+              </div>
+            </div>
+
+            <div class="relative w-16 h-16">
+              <svg class="w-full h-full animate-spin" viewBox="0 0 36 36">
+                <path class="text-slate-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"/>
+                <path class="text-success" stroke-dasharray="25, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+
+            <!-- AI Progress -->
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 bg-ai-purple-100 rounded-full flex items-center justify-center">
+                <i data-lucide="sparkles" class="w-6 h-6 text-ai-purple-600"></i>
+              </div>
+              <div>
+                <p class="text-body-md font-medium text-slate-900">AI đang phân tích...</p>
+                <p class="text-body-sm text-ai-purple-600">Ước tính còn 30 giây</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== FULL PAGE LOADING ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="monitor" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Full Page Loading</h2>
+          <p class="text-body-md text-slate-500">Page-level loading states</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Full Page Spinner -->
+          <div class="border border-slate-200 rounded-xl p-8 flex flex-col items-center justify-center min-h-[200px]">
+            <div class="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full spinner mb-4"></div>
+            <p class="text-body-lg text-slate-700 font-medium">Đang tải...</p>
+            <p class="text-body-sm text-slate-500">Vui lòng đợi trong giây lát</p>
+          </div>
+
+          <!-- AI Loading -->
+          <div class="border border-ai-purple-200 rounded-xl p-8 flex flex-col items-center justify-center min-h-[200px] bg-ai-purple-50/50">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-3 h-3 bg-ai-purple-600 rounded-full bounce-loader"></div>
+              <div class="w-3 h-3 bg-ai-purple-600 rounded-full bounce-loader" style="animation-delay: 0.15s"></div>
+              <div class="w-3 h-3 bg-ai-purple-600 rounded-full bounce-loader" style="animation-delay: 0.3s"></div>
+            </div>
+            <p class="text-body-lg text-ai-purple-700 font-medium">AI đang xử lý...</p>
+            <p class="text-body-sm text-ai-purple-600">Phân tích tài liệu với GPT-4</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== EMPTY STATES ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="inbox" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Empty States</h2>
+          <p class="text-body-md text-slate-500">No data and error states</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Empty Documents -->
+          <div class="border border-slate-200 rounded-xl p-8 text-center">
+            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="folder-open" class="w-8 h-8 text-slate-400"></i>
+            </div>
+            <h3 class="text-h3 text-slate-900 mb-2">Chưa có tài liệu</h3>
+            <p class="text-body-md text-slate-500 mb-4">Bạn chưa upload tài liệu nào. Hãy bắt đầu ngay!</p>
+            <button class="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              Upload tài liệu
+            </button>
+          </div>
+
+          <!-- No Search Results -->
+          <div class="border border-slate-200 rounded-xl p-8 text-center">
+            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="search-x" class="w-8 h-8 text-slate-400"></i>
+            </div>
+            <h3 class="text-h3 text-slate-900 mb-2">Không tìm thấy</h3>
+            <p class="text-body-md text-slate-500 mb-4">Không có kết quả phù hợp với "keyword"</p>
+            <button class="inline-flex items-center gap-2 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">
+              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+              Xóa bộ lọc
+            </button>
+          </div>
+
+          <!-- Error State -->
+          <div class="border border-danger/20 rounded-xl p-8 text-center bg-danger/5">
+            <div class="w-16 h-16 bg-danger/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="alert-octagon" class="w-8 h-8 text-danger"></i>
+            </div>
+            <h3 class="text-h3 text-slate-900 mb-2">Đã xảy ra lỗi</h3>
+            <p class="text-body-md text-slate-500 mb-4">Không thể tải dữ liệu. Vui lòng thử lại.</p>
+            <button class="inline-flex items-center gap-2 px-4 py-2 bg-danger text-white rounded-lg text-sm font-medium hover:bg-danger-dark">
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+              Thử lại
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Navigation -->
+  <footer class="bg-white border-t border-slate-200 py-8 px-8">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <p class="text-body-sm text-slate-500">K-Portal Framework v1.0</p>
+      <div class="flex gap-4">
+        <a href="typography-colors.html" class="text-body-sm text-primary-600 hover:text-primary-700">Colors</a>
+        <a href="layout-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Layout</a>
+        <a href="components-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Components</a>
+        <a href="forms-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Forms</a>
+        <a href="data-display-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Data Display</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal Overlay (Hidden by default) -->
+  <div id="modalOverlay" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
+    <!-- Modal content will be injected here -->
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Toast Notification System
+    function showToast(type) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      
+      const configs = {
+        success: { icon: 'check-circle', bg: 'bg-success', border: 'border-success/30', lightBg: 'bg-success/5', text: 'Thành công', msg: 'Tài liệu đã được upload thành công.' },
+        error: { icon: 'x-circle', bg: 'bg-danger', border: 'border-danger/30', lightBg: 'bg-danger/5', text: 'Lỗi', msg: 'Không thể kết nối đến server.' },
+        warning: { icon: 'alert-triangle', bg: 'bg-warning', border: 'border-warning/30', lightBg: 'bg-warning/5', text: 'Cảnh báo', msg: 'File vượt quá kích thước giới hạn.' },
+        info: { icon: 'info', bg: 'bg-info', border: 'border-info/30', lightBg: 'bg-info/5', text: 'Thông tin', msg: 'Phiên bản mới đã được cập nhật.' }
+      };
+      
+      const config = configs[type];
+      toast.className = `toast-enter rounded-lg border ${config.border} ${config.lightBg} p-4 flex items-start gap-3 shadow-lg glass`;
+      toast.innerHTML = `
+        <div class="w-8 h-8 ${config.bg} rounded-full flex items-center justify-center shrink-0">
+          <i data-lucide="${config.icon}" class="w-4 h-4 text-white"></i>
+        </div>
+        <div class="flex-1">
+          <p class="font-medium text-slate-900">${config.text}</p>
+          <p class="text-body-sm text-slate-600">${config.msg}</p>
+        </div>
+        <button onclick="this.closest('div').remove()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      `;
+      
+      container.appendChild(toast);
+      lucide.createIcons();
+      
+      setTimeout(() => {
+        toast.classList.remove('toast-enter');
+        toast.classList.add('toast-exit');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function showToastWithAction() {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast-enter rounded-lg border border-primary-200 bg-primary-50 p-4 flex items-start gap-3 shadow-lg glass';
+      toast.innerHTML = `
+        <div class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center shrink-0">
+          <i data-lucide="save" class="w-4 h-4 text-white"></i>
+        </div>
+        <div class="flex-1">
+          <p class="font-medium text-slate-900">Tài liệu đã được lưu</p>
+          <p class="text-body-sm text-slate-600">Bạn có muốn xem trước?</p>
+          <div class="flex gap-2 mt-2">
+            <button class="px-3 py-1 bg-primary-600 text-white rounded text-sm hover:bg-primary-700">Xem</button>
+            <button onclick="this.closest('.toast-enter').remove()" class="px-3 py-1 text-slate-600 hover:text-slate-800 text-sm">Đóng</button>
+          </div>
+        </div>
+      `;
+      container.appendChild(toast);
+      lucide.createIcons();
+    }
+
+    // Modal System
+    function openModal(type) {
+      const overlay = document.getElementById('modalOverlay');
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex', 'modal-enter');
+      
+      const modals = {
+        simple: `
+          <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 modal-content-enter">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center shrink-0">
+                <i data-lucide="info" class="w-5 h-5 text-primary-600"></i>
+              </div>
+              <div>
+                <h3 class="text-h3 text-slate-900 mb-1">Thông báo</h3>
+                <p class="text-body-md text-slate-600 mb-4">Tài liệu của bạn đã được lưu thành công.</p>
+                <div class="flex gap-3">
+                  <button onclick="closeModal()" class="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700">Đóng</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `,
+        confirm: `
+          <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 modal-content-enter">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-warning/10 rounded-full flex items-center justify-center shrink-0">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-warning"></i>
+              </div>
+              <div>
+                <h3 class="text-h3 text-slate-900 mb-1">Xác nhận</h3>
+                <p class="text-body-md text-slate-600 mb-4">Bạn có chắc chắn muốn thực hiện hành động này?</p>
+                <div class="flex gap-3">
+                  <button onclick="closeModal()" class="flex-1 px-4 py-2 bg-warning text-white rounded-lg text-sm font-medium hover:bg-warning-dark">Xác nhận</button>
+                  <button onclick="closeModal()" class="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Hủy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `,
+        delete: `
+          <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 modal-content-enter">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-danger/10 rounded-full flex items-center justify-center shrink-0">
+                <i data-lucide="trash-2" class="w-5 h-5 text-danger"></i>
+              </div>
+              <div>
+                <h3 class="text-h3 text-slate-900 mb-1">Xác nhận xóa</h3>
+                <p class="text-body-md text-slate-600 mb-4">Bạn có chắc chắn muốn xóa? Hành động này không thể hoàn tác.</p>
+                <div class="flex gap-3">
+                  <button onclick="closeModal()" class="flex-1 px-4 py-2 bg-danger text-white rounded-lg text-sm font-medium hover:bg-danger-dark">Xóa</button>
+                  <button onclick="closeModal()" class="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Hủy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `,
+        large: `
+          <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto modal-content-enter">
+            <div class="p-6 border-b border-slate-200">
+              <div class="flex items-center justify-between">
+                <h3 class="text-h3 text-slate-900">Large Modal</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
+                  <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+              </div>
+            </div>
+            <div class="p-6">
+              <p class="text-body-md text-slate-600 mb-4">Nội dung modal rộng với nhiều thông tin chi tiết...</p>
+              <div class="h-32 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400">Content area</div>
+            </div>
+            <div class="p-6 border-t border-slate-200 flex justify-end gap-3">
+              <button onclick="closeModal()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Đóng</button>
+              <button onclick="closeModal()" class="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700">Lưu</button>
+            </div>
+          </div>
+        `,
+        ai: `
+          <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 modal-content-enter border-2 border-ai-purple-200">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-ai-purple-100 rounded-full flex items-center justify-center shrink-0">
+                <i data-lucide="sparkles" class="w-5 h-5 text-ai-purple-600"></i>
+              </div>
+              <div>
+                <h3 class="text-h3 text-slate-900 mb-1">AI Analysis</h3>
+                <p class="text-body-md text-slate-600 mb-4">AI đã phân tích tài liệu và tìm thấy 3 vấn đề cần xem xét.</p>
+                <div class="bg-ai-purple-50 rounded-lg p-3 mb-4">
+                  <div class="flex items-center gap-2 text-ai-purple-700">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    <span class="text-sm">Confidence: 94%</span>
+                  </div>
+                </div>
+                <div class="flex gap-3">
+                  <button onclick="closeModal()" class="flex-1 px-4 py-2 bg-ai-purple-600 text-white rounded-lg text-sm font-medium hover:bg-ai-purple-700">Xem kết quả</button>
+                  <button onclick="closeModal()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Đóng</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      };
+      
+      overlay.innerHTML = modals[type];
+      lucide.createIcons();
+    }
+
+    function closeModal() {
+      const overlay = document.getElementById('modalOverlay');
+      overlay.classList.remove('modal-enter');
+      overlay.classList.add('modal-exit');
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex', 'modal-exit');
+      }, 200);
+    }
+
+    // Close modal on overlay click
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>

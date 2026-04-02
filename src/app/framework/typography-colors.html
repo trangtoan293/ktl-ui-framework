@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-Portal | Typography & Colors Style Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // Brand Colors
+            primary: {
+              50: '#EFF6FF',
+              100: '#DBEAFE',
+              200: '#BFDBFE',
+              300: '#93C5FD',
+              400: '#60A5FA',
+              500: '#3B82D4',
+              600: '#2563B0',
+              700: '#1E4D8C',
+              800: '#153666',
+              900: '#0C2340',
+            },
+            // Semantic Colors
+            success: {
+              DEFAULT: '#22C55E',
+              light: '#F0FDF4',
+              dark: '#166534',
+            },
+            warning: {
+              DEFAULT: '#F59E0B',
+              light: '#FFFBEB',
+              dark: '#92400E',
+            },
+            danger: {
+              DEFAULT: '#EF4444',
+              light: '#FEF2F2',
+              dark: '#991B1B',
+            },
+            info: {
+              DEFAULT: '#3B82F6',
+              light: '#EFF6FF',
+              dark: '#1E40AF',
+            },
+            // AI Colors
+            ai: {
+              purple: {
+                100: '#EDE9FE',
+                200: '#DDD6FE',
+                300: '#C4B5FD',
+                400: '#A78BFA',
+                500: '#8B5CF6',
+                600: '#7C3AED',
+                700: '#6D28D9',
+                800: '#5B21B6',
+                900: '#4C1D95',
+              }
+            }
+          },
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          fontSize: {
+            'display-lg': ['48px', { lineHeight: '56px', fontWeight: '700' }],
+            'h1': ['36px', { lineHeight: '44px', fontWeight: '700' }],
+            'h2': ['28px', { lineHeight: '36px', fontWeight: '600' }],
+            'h3': ['22px', { lineHeight: '28px', fontWeight: '600' }],
+            'body-lg': ['16px', { lineHeight: '24px' }],
+            'body-md': ['14px', { lineHeight: '20px' }],
+            'body-sm': ['12px', { lineHeight: '18px' }],
+          },
+          borderRadius: {
+            'sm': '4px',
+            'md': '8px',
+            'lg': '12px',
+            'xl': '16px',
+            'full': '9999px',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom styles */
+    .color-swatch {
+      transition: all 0.2s ease;
+    }
+    .color-swatch:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 10px -2px rgba(0, 0, 0, 0.05);
+    }
+    .typo-demo {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+    .code-block {
+      background: #0C2340;
+      color: #e2e8f0;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
+  <!-- Header -->
+  <header class="bg-primary-900 text-white py-6 px-8 sticky top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i data-lucide="palette" class="w-8 h-8"></i>
+        <div>
+          <h1 class="text-2xl font-bold">Typography & Colors</h1>
+          <p class="text-primary-200 text-sm">K-Portal Design System Style Guide</p>
+        </div>
+      </div>
+      <a href="components-framework.html" class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        <span class="text-sm">Components</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-8 py-12 space-y-16">
+    
+    <!-- Typography Section -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <i data-lucide="type" class="w-6 h-6 text-primary-600"></i>
+        <h2 class="text-h2 text-primary-900">Typography</h2>
+      </div>
+      
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 space-y-8">
+        <!-- Display -->
+        <div class="typo-demo p-6 rounded-lg">
+          <p class="text-body-sm text-slate-500 mb-2 uppercase tracking-wide">Display Large</p>
+          <p class="text-display-lg text-primary-900 mb-2">Display Large 48/56</p>
+          <p class="text-body-sm text-slate-400">Font: Be Vietnam Pro | Weight: 700 | Line-height: 56px</p>
+        </div>
+
+        <!-- Headings -->
+        <div class="space-y-6">
+          <div class="border-b border-slate-200 pb-4">
+            <p class="text-body-sm text-slate-500 mb-2 uppercase tracking-wide">Heading 1</p>
+            <h1 class="text-h1 text-primary-900 mb-1">Heading 1 - 36/44</h1>
+            <p class="text-body-sm text-slate-400">Font: Be Vietnam Pro | Weight: 700 | Line-height: 44px</p>
+          </div>
+          <div class="border-b border-slate-200 pb-4">
+            <p class="text-body-sm text-slate-500 mb-2 uppercase tracking-wide">Heading 2</p>
+            <h2 class="text-h2 text-primary-900 mb-1">Heading 2 - 28/36</h2>
+            <p class="text-body-sm text-slate-400">Font: Be Vietnam Pro | Weight: 600 | Line-height: 36px</p>
+          </div>
+          <div class="border-b border-slate-200 pb-4">
+            <p class="text-body-sm text-slate-500 mb-2 uppercase tracking-wide">Heading 3</p>
+            <h3 class="text-h3 text-primary-900 mb-1">Heading 3 - 22/28</h3>
+            <p class="text-body-sm text-slate-400">Font: Be Vietnam Pro | Weight: 600 | Line-height: 28px</p>
+          </div>
+        </div>
+
+        <!-- Body Text -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-slate-50 p-4 rounded-lg">
+            <p class="text-body-sm text-slate-500 mb-2 uppercase tracking-wide">Body Large</p>
+            <p class="text-body-lg text-slate-700 mb-2">16/24 - Be Vietnam Pro Regular</p>
+            <p class="text-body-sm text-slate-400">Dùng cho nội dung chính</p>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-lg">
+            <p class="text-body-sm text-slate-500 mb-2 uppercase tracking-wide">Body Medium</p>
+            <p class="text-body-md text-slate-700 mb-2">14/20 - Be Vietnam Pro Regular</p>
+            <p class="text-body-sm text-slate-400">Dùng cho nội dung phụ</p>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-lg">
+            <p class="text-body-sm text-slate-500 mb-2 uppercase tracking-wide">Body Small</p>
+            <p class="text-body-sm text-slate-700 mb-2">12/18 - Be Vietnam Pro Regular</p>
+            <p class="text-body-sm text-slate-400">Dùng cho caption, meta</p>
+          </div>
+        </div>
+
+        <!-- Monospace -->
+        <div class="code-block p-6 rounded-lg">
+          <p class="text-body-sm text-primary-300 mb-2 uppercase tracking-wide">Monospace (JetBrains Mono)</p>
+          <code class="font-mono text-body-md">const kPortal = new Framework();</code>
+          <p class="text-body-sm text-slate-400 mt-2">Dùng cho code, ID, timestamps</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brand Colors Section -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <i data-lucide="droplet" class="w-6 h-6 text-primary-600"></i>
+        <h2 class="text-h2 text-primary-900">Brand Colors</h2>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <!-- Primary 900 -->
+        <div class="color-swatch bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+          <div class="h-24 bg-primary-900"></div>
+          <div class="p-4">
+            <p class="font-semibold text-slate-900">Primary 900</p>
+            <code class="text-body-sm text-slate-500 font-mono">#0C2340</code>
+            <p class="text-body-sm text-slate-400 mt-1">Headings</p>
+          </div>
+        </div>
+
+        <!-- Primary 800 -->
+        <div class="color-swatch bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+          <div class="h-24 bg-primary-800"></div>
+          <div class="p-4">
+            <p class="font-semibold text-slate-900">Primary 800</p>
+            <code class="text-body-sm text-slate-500 font-mono">#153666</code>
+            <p class="text-body-sm text-slate-400 mt-1">Sidebar bg</p>
+          </div>
+        </div>
+
+        <!-- Primary 700 -->
+        <div class="color-swatch bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+          <div class="h-24 bg-primary-700"></div>
+          <div class="p-4">
+            <p class="font-semibold text-slate-900">Primary 700</p>
+            <code class="text-body-sm text-slate-500 font-mono">#1E4D8C</code>
+            <p class="text-body-sm text-slate-400 mt-1">Sidebar hover</p>
+          </div>
+        </div>
+
+        <!-- Primary 600 -->
+        <div class="color-swatch bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+          <div class="h-24 bg-primary-600"></div>
+          <div class="p-4">
+            <p class="font-semibold text-slate-900">Primary 600</p>
+            <code class="text-body-sm text-slate-500 font-mono">#2563B0</code>
+            <p class="text-body-sm text-slate-400 mt-1">Primary button</p>
+          </div>
+        </div>
+
+        <!-- Primary 500 -->
+        <div class="color-swatch bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+          <div class="h-24 bg-primary-500"></div>
+          <div class="p-4">
+            <p class="font-semibold text-slate-900">Primary 500</p>
+            <code class="text-body-sm text-slate-500 font-mono">#3B82D4</code>
+            <p class="text-body-sm text-slate-400 mt-1">Links, focus</p>
+          </div>
+        </div>
+
+        <!-- Primary 50 -->
+        <div class="color-swatch bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+          <div class="h-24 bg-primary-50 border-b border-slate-200"></div>
+          <div class="p-4">
+            <p class="font-semibold text-slate-900">Primary 50</p>
+            <code class="text-body-sm text-slate-500 font-mono">#EFF6FF</code>
+            <p class="text-body-sm text-slate-400 mt-1">Subtle highlight</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Semantic Colors Section -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <i data-lucide="check-circle-2" class="w-6 h-6 text-success"></i>
+        <h2 class="text-h2 text-primary-900">Semantic Colors</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Success -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-lg bg-success flex items-center justify-center">
+              <i data-lucide="check" class="w-6 h-6 text-white"></i>
+            </div>
+            <div>
+              <p class="font-semibold text-slate-900">Success</p>
+              <code class="text-body-sm text-slate-500 font-mono">#22C55E</code>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex gap-2">
+              <div class="flex-1 h-8 rounded bg-success"></div>
+              <div class="flex-1 h-8 rounded bg-success/20"></div>
+            </div>
+            <p class="text-body-sm text-slate-500">Default + Light bg</p>
+          </div>
+        </div>
+
+        <!-- Warning -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-lg bg-warning flex items-center justify-center">
+              <i data-lucide="alert-triangle" class="w-6 h-6 text-white"></i>
+            </div>
+            <div>
+              <p class="font-semibold text-slate-900">Warning</p>
+              <code class="text-body-sm text-slate-500 font-mono">#F59E0B</code>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex gap-2">
+              <div class="flex-1 h-8 rounded bg-warning"></div>
+              <div class="flex-1 h-8 rounded bg-warning/20"></div>
+            </div>
+            <p class="text-body-sm text-slate-500">Default + Light bg</p>
+          </div>
+        </div>
+
+        <!-- Danger -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-lg bg-danger flex items-center justify-center">
+              <i data-lucide="x-circle" class="w-6 h-6 text-white"></i>
+            </div>
+            <div>
+              <p class="font-semibold text-slate-900">Danger</p>
+              <code class="text-body-sm text-slate-500 font-mono">#EF4444</code>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex gap-2">
+              <div class="flex-1 h-8 rounded bg-danger"></div>
+              <div class="flex-1 h-8 rounded bg-danger/20"></div>
+            </div>
+            <p class="text-body-sm text-slate-500">Default + Light bg</p>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-lg bg-info flex items-center justify-center">
+              <i data-lucide="info" class="w-6 h-6 text-white"></i>
+            </div>
+            <div>
+              <p class="font-semibold text-slate-900">Info</p>
+              <code class="text-body-sm text-slate-500 font-mono">#3B82F6</code>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex gap-2">
+              <div class="flex-1 h-8 rounded bg-info"></div>
+              <div class="flex-1 h-8 rounded bg-info/20"></div>
+            </div>
+            <p class="text-body-sm text-slate-500">Default + Light bg</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Colors Section -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <i data-lucide="sparkles" class="w-6 h-6 text-ai-purple-600"></i>
+        <h2 class="text-h2 text-primary-900">AI Colors</h2>
+      </div>
+
+      <div class="bg-gradient-to-r from-ai-purple-100 to-white rounded-xl p-8 border border-ai-purple-200">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <!-- AI 600 -->
+          <div class="color-swatch bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="h-20 bg-ai-purple-600"></div>
+            <div class="p-3">
+              <p class="font-semibold text-slate-900 text-sm">AI Purple 600</p>
+              <code class="text-body-sm text-slate-500 font-mono">#7C3AED</code>
+              <p class="text-body-sm text-slate-400 mt-1">AI elements</p>
+            </div>
+          </div>
+
+          <!-- AI 500 -->
+          <div class="color-swatch bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="h-20 bg-ai-purple-500"></div>
+            <div class="p-3">
+              <p class="font-semibold text-slate-900 text-sm">AI Purple 500</p>
+              <code class="text-body-sm text-slate-500 font-mono">#8B5CF6</code>
+              <p class="text-body-sm text-slate-400 mt-1">Buttons</p>
+            </div>
+          </div>
+
+          <!-- AI 400 -->
+          <div class="color-swatch bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="h-20 bg-ai-purple-400"></div>
+            <div class="p-3">
+              <p class="font-semibold text-slate-900 text-sm">AI Purple 400</p>
+              <code class="text-body-sm text-slate-500 font-mono">#A78BFA</code>
+              <p class="text-body-sm text-slate-400 mt-1">Hover states</p>
+            </div>
+          </div>
+
+          <!-- AI 100 -->
+          <div class="color-swatch bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="h-20 bg-ai-purple-100 border-b border-ai-purple-200"></div>
+            <div class="p-3">
+              <p class="font-semibold text-slate-900 text-sm">AI Purple 100</p>
+              <code class="text-body-sm text-slate-500 font-mono">#EDE9FE</code>
+              <p class="text-body-sm text-slate-400 mt-1">AI backgrounds</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Border Radius Section -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <i data-lucide="square" class="w-6 h-6 text-primary-600"></i>
+        <h2 class="text-h2 text-primary-900">Border Radius</h2>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div class="flex flex-wrap items-center gap-8">
+          <div class="flex flex-col items-center gap-3">
+            <div class="w-16 h-16 bg-primary-600 rounded-sm flex items-center justify-center text-white font-mono text-sm">SM</div>
+            <code class="text-body-sm text-slate-500">4px</code>
+          </div>
+          <div class="flex flex-col items-center gap-3">
+            <div class="w-16 h-16 bg-primary-600 rounded-md flex items-center justify-center text-white font-mono text-sm">MD</div>
+            <code class="text-body-sm text-slate-500">8px</code>
+          </div>
+          <div class="flex flex-col items-center gap-3">
+            <div class="w-16 h-16 bg-primary-600 rounded-lg flex items-center justify-center text-white font-mono text-sm">LG</div>
+            <code class="text-body-sm text-slate-500">12px</code>
+          </div>
+          <div class="flex flex-col items-center gap-3">
+            <div class="w-16 h-16 bg-primary-600 rounded-xl flex items-center justify-center text-white font-mono text-sm">XL</div>
+            <code class="text-body-sm text-slate-500">16px</code>
+          </div>
+          <div class="flex flex-col items-center gap-3">
+            <div class="w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center text-white font-mono text-xs">FULL</div>
+            <code class="text-body-sm text-slate-500">9999px</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Shadow Section -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <i data-lucide="layers" class="w-6 h-6 text-primary-600"></i>
+        <h2 class="text-h2 text-primary-900">Shadows</h2>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div class="h-24 bg-white rounded-lg shadow-sm flex items-center justify-center">
+            <span class="text-body-sm text-slate-500">shadow-sm</span>
+          </div>
+          <div class="h-24 bg-white rounded-lg shadow flex items-center justify-center">
+            <span class="text-body-sm text-slate-500">shadow</span>
+          </div>
+          <div class="h-24 bg-white rounded-lg shadow-md flex items-center justify-center">
+            <span class="text-body-sm text-slate-500">shadow-md</span>
+          </div>
+          <div class="h-24 bg-white rounded-lg shadow-lg flex items-center justify-center">
+            <span class="text-body-sm text-slate-500">shadow-lg</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Usage Examples -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <i data-lucide="code-2" class="w-6 h-6 text-primary-600"></i>
+        <h2 class="text-h2 text-primary-900">Usage Examples</h2>
+      </div>
+
+      <div class="bg-slate-900 rounded-xl p-6 text-slate-300 font-mono text-sm overflow-x-auto">
+        <p class="text-slate-500 mb-4">// Tailwind Classes</p>
+        <div class="space-y-2">
+          <p><span class="text-purple-400">&lt;!-- Brand Colors --&gt;</span></p>
+          <p><span class="text-slate-500">&lt;div</span> <span class="text-sky-400">class</span>=<span class="text-green-400">"bg-primary-600 text-white"</span><span class="text-slate-500">&gt;</span>Primary Button<span class="text-slate-500">&lt;/div&gt;</span></p>
+          <p><span class="text-slate-500">&lt;div</span> <span class="text-sky-400">class</span>=<span class="text-green-400">"bg-primary-800 text-white"</span><span class="text-slate-500">&gt;</span>Sidebar<span class="text-slate-500">&lt;/div&gt;</span></p>
+          <p><span class="text-purple-400">&lt;!-- Semantic --&gt;</span></p>
+          <p><span class="text-slate-500">&lt;div</span> <span class="text-sky-400">class</span>=<span class="text-green-400">"bg-success text-success-dark"</span><span class="text-slate-500">&gt;</span>Success<span class="text-slate-500">&lt;/div&gt;</span></p>
+          <p><span class="text-slate-500">&lt;div</span> <span class="text-sky-400">class</span>=<span class="text-green-400">"bg-danger/20 text-danger"</span><span class="text-slate-500">&gt;</span>Error<span class="text-slate-500">&lt;/div&gt;</span></p>
+          <p><span class="text-purple-400">&lt;!-- AI --&gt;</span></p>
+          <p><span class="text-slate-500">&lt;div</span> <span class="text-sky-400">class</span>=<span class="text-green-400">"bg-ai-purple-100 border-ai-purple-600"</span><span class="text-slate-500">&gt;</span>AI Badge<span class="text-slate-500">&lt;/div&gt;</span></p>
+          <p><span class="text-purple-400">&lt;!-- Typography --&gt;</span></p>
+          <p><span class="text-slate-500">&lt;h1</span> <span class="text-sky-400">class</span>=<span class="text-green-400">"text-h1 text-primary-900"</span><span class="text-slate-500">&gt;</span>Title<span class="text-slate-500">&lt;/h1&gt;</span></p>
+          <p><span class="text-slate-500">&lt;p</span> <span class="text-sky-400">class</span>=<span class="text-green-400">"text-body-lg text-slate-700"</span><span class="text-slate-500">&gt;</span>Content<span class="text-slate-500">&lt;/p&gt;</span></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Navigation -->
+  <footer class="bg-white border-t border-slate-200 py-8 px-8">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <p class="text-body-sm text-slate-500">K-Portal Framework v1.0</p>
+      <div class="flex gap-4">
+        <a href="layout-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Layout</a>
+        <a href="components-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Components</a>
+        <a href="forms-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Forms</a>
+        <a href="feedback-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Feedback</a>
+        <a href="data-display-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Data Display</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>

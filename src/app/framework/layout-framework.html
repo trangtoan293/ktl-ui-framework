@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-Portal | Layout Framework</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 300: '#93C5FD', 400: '#60A5FA', 500: '#3B82D4', 600: '#2563B0', 700: '#1E4D8C', 800: '#153666', 900: '#0C2340',
+            },
+            success: { 50: '#F0FDF4', 100: '#DCFCE7', 200: '#BBF7D0', 500: '#22C55E', 600: '#16A34A', 700: '#15803D' },
+            warning: { 50: '#FFFBEB', 100: '#FEF3C7', 200: '#FDE68A', 500: '#F59E0B', 600: '#D97706', 700: '#B45309' },
+            danger: { 50: '#FEF2F2', 100: '#FEE2E2', 200: '#FECACA', 500: '#EF4444', 600: '#DC2626', 700: '#B91C1C' },
+            info: { 50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 500: '#3B82F6', 600: '#2563EB', 700: '#1D4ED8' },
+            ai: { 50: '#F5F3FF', 100: '#EDE9FE', 200: '#DDD6FE', 500: '#8B5CF6', 600: '#7C3AED', 700: '#6D28D9' }
+          },
+          fontFamily: { sans: ['"Be Vietnam Pro"', 'system-ui', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] },
+        }
+      }
+    }
+  </script>
+  <style>
+    .sidebar-transition { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+    .submenu { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+    .submenu.open { max-height: 500px; opacity: 1; margin-top: 4px; }
+    .hide-text { opacity: 0; width: 0; visibility: hidden; transition: all 0.2s ease; }
+    .show-text { opacity: 1; width: auto; visibility: visible; transition: opacity 0.3s ease 0.15s; }
+  </style>
+</head>
+<body class="bg-slate-50 flex flex-col h-screen text-slate-800 font-sans mx-auto overflow-hidden">
+
+  <!-- ==================== TOP NAV WORKSPACE SWITCHER ==================== -->
+  <header class="bg-primary-900 text-white h-16 shrink-0 flex items-center justify-between px-6 border-b border-primary-800 shadow-sm z-50">
+    <div class="flex items-center gap-6 h-full">
+      <!-- Brand -->
+      <div class="flex items-center gap-2 select-none">
+        <div class="h-8 w-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center shadow-inner">
+          <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
+        </div>
+        <span class="font-bold text-lg tracking-tight">K-Portal</span> 
+        <span class="text-primary-300 text-xs font-medium ml-1 bg-primary-800 px-1.5 py-0.5 rounded">v2.1</span>
+      </div>
+
+      <!-- Workspace Switcher Pills -->
+      <nav class="hidden md:flex items-center gap-1.5 bg-primary-800/50 p-1 rounded-lg border border-primary-700/50 ml-4">
+        <button class="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 bg-primary-600 text-white shadow-sm focus-visible:ring-2 focus-visible:ring-primary-400">
+          <i data-lucide="folders" class="w-4 h-4 text-primary-100"></i>
+          Tài liệu
+        </button>
+        <button class="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-primary-200 hover:text-white hover:bg-primary-700/80 focus-visible:ring-2 focus-visible:ring-primary-400">
+          <i data-lucide="combine" class="w-4 h-4"></i>
+          Đối chiếu
+        </button>
+        <button class="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-primary-200 hover:text-white hover:bg-primary-700/80 focus-visible:ring-2 focus-visible:ring-primary-400">
+          <i data-lucide="file-text" class="w-4 h-4"></i>
+          Sinh Báo cáo
+        </button>
+        <button class="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-primary-200 hover:text-white hover:bg-primary-700/80 focus-visible:ring-2 focus-visible:ring-primary-400">
+          <i data-lucide="sparkles" class="w-4 h-4 text-ai-purple-400"></i>
+          Vận hành AI
+        </button>
+        <button class="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-primary-200 hover:text-white hover:bg-primary-700/80 focus-visible:ring-2 focus-visible:ring-primary-400">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+          Quản trị
+        </button>
+      </nav>
+    </div>
+
+    <!-- Right Actions -->
+    <div class="flex items-center gap-4">
+      <!-- Search Input -->
+      <div class="hidden md:flex items-center bg-primary-800 hover:bg-primary-700 rounded-lg px-3 py-1.5 focus-within:ring-2 focus-within:ring-primary-400 focus-within:bg-primary-800 transition-all duration-200 border border-transparent shadow-sm">
+        <i data-lucide="search" class="w-4 h-4 text-primary-300 mr-2"></i>
+        <input type="text" placeholder="Tìm kiếm hệ thống..." class="bg-transparent border-none outline-none text-sm w-48 text-white placeholder:text-primary-300" aria-label="Tìm kiếm">
+        <kbd class="ml-2 px-1.5 py-0.5 bg-primary-900 border border-primary-700 text-[10px] font-mono text-primary-300 rounded">⌘K</kbd>
+      </div>
+
+      <!-- Notifications -->
+      <button class="relative p-2 text-primary-200 hover:text-white hover:bg-primary-800 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary-400">
+        <i data-lucide="bell" class="w-5 h-5"></i>
+        <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-danger-500 rounded-full border-2 border-primary-900 animate-pulse"></span>
+      </button>
+
+      <!-- User Profile -->
+      <div class="flex items-center gap-2 cursor-pointer hover:bg-primary-800 p-1.5 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary-400" tabindex="0">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-500 flex items-center justify-center font-medium shadow-sm text-white">TT</div>
+        <div class="hidden sm:block text-left">
+          <p class="text-sm font-medium leading-none text-white">Trần Toàn</p>
+          <p class="text-xs text-primary-300 mt-1">Lead Auditor</p>
+        </div>
+        <i data-lucide="chevron-down" class="w-4 h-4 text-primary-400 ml-1"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN LAYOUT ==================== -->
+  <div class="flex flex-1 overflow-hidden">
+    
+    <!-- CONTEXTUAL SIDEBAR -->
+    <aside id="sidebar" class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 flex-shrink-0 relative sidebar-transition z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+      
+      <!-- Collapse Toggle Button -->
+      <button id="sidebarToggle" class="absolute -right-3 top-6 bg-white border border-slate-200 shadow-sm text-slate-400 hover:text-primary-600 rounded-full p-1 z-30 transition-colors">
+        <i data-lucide="chevron-left" class="w-4 h-4" id="sidebarToggleIcon"></i>
+      </button>
+
+      <!-- Context Header -->
+      <div class="px-4 py-4 border-b border-slate-100 bg-slate-50/50 sidebar-text-container h-[72px] flex items-center" id="contextHeader">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded bg-primary-100 flex items-center justify-center text-primary-700 shrink-0">
+            <i data-lucide="folders" class="w-4 h-4"></i>
+          </div>
+          <div class="sidebar-text show-text whitespace-nowrap overflow-hidden">
+            <h3 class="text-sm font-bold text-slate-800">Trung tâm Tài liệu</h3>
+            <p class="text-[11px] text-slate-500 uppercase tracking-wider font-semibold mt-0.5">Workspace</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Items -->
+      <div class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+        
+        <!-- Standard Menu Item -->
+        <button class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg font-medium text-slate-600 hover:bg-slate-50 hover:text-primary-700 transition-colors focus-visible:ring-2 focus-visible:ring-primary-500">
+          <div class="flex items-center gap-3">
+            <i data-lucide="database" class="w-4 h-4 text-slate-400 shrink-0"></i>
+            <span class="sidebar-text show-text whitespace-nowrap">Kho tài liệu</span>
+          </div>
+        </button>
+
+        <!-- Active Submenu Group -->
+        <div class="pt-1 pb-1 w-full relative">
+          <button class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg font-semibold text-primary-900 bg-primary-50 transition-colors focus-visible:ring-2 focus-visible:ring-primary-500" onclick="toggleSubmenu('ocr-menu')">
+            <div class="flex items-center gap-3">
+              <i data-lucide="file-search" class="w-4 h-4 text-primary-600 shrink-0"></i>
+              <span class="sidebar-text show-text whitespace-nowrap">Trạm xử lý OCR</span>
+            </div>
+            <i data-lucide="chevron-down" id="ocr-icon" class="w-4 h-4 text-primary-400 sidebar-text show-text transition-transform duration-200"></i>
+          </button>
+          
+          <!-- Sub Items -->
+          <div id="ocr-menu" class="submenu open pl-10 pr-2 mt-1 space-y-1 relative sidebar-text show-text">
+            <div class="absolute left-5 top-0 bottom-2 w-px bg-slate-200"></div>
+            <a href="#" class="block px-3 py-1.5 text-sm rounded-md text-slate-600 hover:text-primary-700 hover:bg-slate-50 transition-colors">
+              Upload file
+            </a>
+            <a href="#" class="block px-3 py-1.5 text-sm rounded-md font-semibold text-primary-700 bg-primary-50/50 relative">
+              <span class="absolute left-[-21px] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary-600 ring-4 ring-white"></span>
+              Bóc tách & Metadata
+            </a>
+          </div>
+        </div>
+
+        <button class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg font-medium text-slate-600 hover:bg-slate-50 hover:text-primary-700 transition-colors focus-visible:ring-2 focus-visible:ring-primary-500">
+          <div class="flex items-center gap-3">
+            <i data-lucide="user-check" class="w-4 h-4 text-slate-400 shrink-0"></i>
+            <span class="sidebar-text show-text whitespace-nowrap">Tài liệu của tôi</span>
+          </div>
+        </button>
+        
+        <button class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg font-medium text-slate-600 hover:bg-slate-50 hover:text-primary-700 transition-colors focus-visible:ring-2 focus-visible:ring-primary-500">
+          <div class="flex items-center gap-3">
+            <i data-lucide="check-square" class="w-4 h-4 text-slate-400 shrink-0"></i>
+            <span class="sidebar-text show-text whitespace-nowrap flex-1 text-left">Hàng đợi duyệt</span>
+          </div>
+          <span class="flex items-center justify-center bg-danger-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full sidebar-text show-text">3</span>
+        </button>
+
+      </div>
+    </aside>
+
+    <!-- PROCESSING MAIN CONTENT -->
+    <main class="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-y-auto">
+      
+      <!-- Top Content Header -->
+      <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0 sticky top-0 z-10 w-full">
+        <div class="flex flex-col justify-center">
+            <!-- Breadcrumb -->
+            <nav class="flex items-center gap-2 text-[11px] font-medium text-slate-500 mb-0.5" aria-label="Breadcrumb">
+                <a href="#" class="hover:text-primary-600 transition-colors">Tài liệu</a>
+                <i data-lucide="chevron-right" class="w-3 h-3 text-slate-400"></i>
+                <a href="#" class="hover:text-primary-600 transition-colors">Trạm xử lý OCR</a>
+                <i data-lucide="chevron-right" class="w-3 h-3 text-slate-400"></i>
+                <span class="text-slate-800">Bóc tách & Metadata</span>
+            </nav>
+            <h1 class="text-lg font-bold text-slate-900 leading-tight">Layout Framework Detail</h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button class="inline-flex items-center gap-2 px-4 py-2 bg-white text-slate-700 border border-slate-300 rounded-lg text-sm font-medium hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors shadow-sm">
+            <i data-lucide="settings-2" class="w-4 h-4"></i> Tùy chỉnh Layout
+          </button>
+          <button class="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 shadow-sm active:scale-[0.98] transition-all focus-visible:ring-2 focus-visible:ring-primary-500">
+            <i data-lucide="plus" class="w-4 h-4"></i> Khởi tạo Element
+          </button>
+        </div>
+      </header>
+
+      <!-- Framework Display Area -->
+      <div class="p-8 max-w-7xl w-full mx-auto space-y-8 pb-24">
+        
+        <div class="bg-primary-50 border border-primary-100 rounded-xl p-6 text-sm text-primary-800">
+            <div class="flex gap-3">
+                <i data-lucide="info" class="w-5 h-5 text-primary-600 shrink-0 mt-0.5"></i>
+                <div>
+                    <h4 class="font-bold text-primary-900 mb-1">Top-Heavy Contextual Navigation</h4>
+                    <p class="leading-relaxed">Đây là kiến trúc layout mới của K-Portal phục vụ Enterprise Auditing. Module cấp 1 nằm trên Top Bar dạng Pill. Sidebar bên trái chuyển thành dạng Contextual (Chỉ hiện menu con của Module). Content chính `main` linh hoạt chứa các dạng Dashboard, Document Viewer (Split pane), form nhập liệu.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid Layout Pattern -->
+        <section>
+          <h2 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <i data-lucide="layout-grid" class="w-5 h-5 text-slate-400"></i>
+            Data Cards & System State
+          </h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-10 h-10 rounded-lg bg-info-50 text-info-600 flex items-center justify-center group-hover:bg-info-600 group-hover:text-white transition-colors">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                    </div>
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-success-50 text-success-700 border border-success-200" role="status">Hoàn thành</span>
+                </div>
+                <h3 class="font-semibold text-slate-900 mb-1">Báo cáo Mảng B</h3>
+                <p class="text-sm text-slate-500 line-clamp-2">Kiểm toán hoàn thành bóc tách 240 metadata.</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-10 h-10 rounded-lg bg-warning-50 text-warning-600 flex items-center justify-center group-hover:bg-warning-600 group-hover:text-white transition-colors">
+                        <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                    </div>
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-warning-50 text-warning-700 border border-warning-200" role="status">Cần review</span>
+                </div>
+                <h3 class="font-semibold text-slate-900 mb-1">Hợp đồng vay #882</h3>
+                <p class="text-sm text-slate-500 line-clamp-2">Phát hiện mâu thuẫn 3 số liệu lãi suất.</p>
+            </div>
+
+            <div class="bg-white border border-ai-purple-200 rounded-xl p-5 shadow-sm hover:shadow-[0_4px_24px_rgba(124,58,237,0.15)] transition-all cursor-pointer group relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-ai-purple-600/10 to-indigo-500/10 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none transition-transform group-hover:scale-110"></div>
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div class="w-10 h-10 rounded-lg bg-ai-purple-50 text-ai-purple-600 flex items-center justify-center group-hover:bg-gradient-to-r group-hover:from-ai-purple-600 group-hover:to-indigo-500 group-hover:text-white transition-colors border border-ai-purple-200 group-hover:border-transparent">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    </div>
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-ai-purple-50 text-ai-purple-700 border border-ai-purple-200 uppercase tracking-wide" role="status">
+                        <span class="w-1.5 h-1.5 rounded-full bg-ai-purple-600 animate-pulse"></span> Processing
+                    </span>
+                </div>
+                <h3 class="font-semibold text-slate-900 mb-1 relative z-10">Phân tích chéo Rule Set</h3>
+                <p class="text-sm text-slate-500 line-clamp-2 relative z-10">AI đang quét đối chiếu 150 quy định với hợp đồng thanh lý...</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Contextual Sidebar Toggle Logic
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggleBtn = document.getElementById('sidebarToggle');
+    const sidebarToggleIcon = document.getElementById('sidebarToggleIcon');
+    let isCollapsed = false;
+
+    sidebarToggleBtn.addEventListener('click', () => {
+      isCollapsed = !isCollapsed;
+      const texts = document.querySelectorAll('.sidebar-text');
+      const icons = document.querySelectorAll('.submenu-icon');
+      
+      if (isCollapsed) {
+        sidebar.classList.remove('w-64');
+        sidebar.classList.add('w-[72px]');
+        sidebarToggleIcon.setAttribute('data-lucide', 'chevron-right');
+        
+        // Hide texts smoothly
+        texts.forEach(el => {
+          el.classList.remove('show-text');
+          el.classList.add('hide-text');
+        });
+        
+        if(icons) icons.forEach(el => el.classList.add('hidden'));
+
+      } else {
+        sidebar.classList.remove('w-[72px]');
+        sidebar.classList.add('w-64');
+        sidebarToggleIcon.setAttribute('data-lucide', 'chevron-left');
+        
+        if(icons) icons.forEach(el => el.classList.remove('hidden'));
+
+        // Show texts smoothly after panel expands
+        setTimeout(() => {
+          texts.forEach(el => {
+            el.classList.remove('hide-text');
+            el.classList.add('show-text');
+          });
+        }, 150);
+      }
+      lucide.createIcons();
+    });
+
+    // Submenu Toggle
+    function toggleSubmenu(menuId) {
+      if (isCollapsed) return; // Disable submenu click when collapsed
+      const menu = document.getElementById(menuId);
+      const icon = document.getElementById(menuId.replace('-menu', '-icon'));
+      
+      if (menu.classList.contains('open')) {
+        menu.classList.remove('open');
+        if(icon) icon.style.transform = 'rotate(0deg)';
+      } else {
+        menu.classList.add('open');
+        if(icon) icon.style.transform = 'rotate(180deg)';
+      }
+    }
+  </script>
+</body>
+</html>

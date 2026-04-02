@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-Portal | Components Framework</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 300: '#93C5FD', 400: '#60A5FA', 500: '#3B82D4', 600: '#2563B0', 700: '#1E4D8C', 800: '#153666', 900: '#0C2340' },
+            success: { DEFAULT: '#22C55E', light: '#F0FDF4', dark: '#166534' },
+            warning: { DEFAULT: '#F59E0B', light: '#FFFBEB', dark: '#92400E' },
+            danger: { DEFAULT: '#EF4444', light: '#FEF2F2', dark: '#991B1B' },
+            info: { DEFAULT: '#3B82F6', light: '#EFF6FF', dark: '#1E40AF' },
+            ai: { purple: { 100: '#EDE9FE', 200: '#DDD6FE', 300: '#C4B5FD', 400: '#A78BFA', 500: '#8B5CF6', 600: '#7C3AED', 700: '#6D28D9', 800: '#5B21B6', 900: '#4C1D95' }}
+          },
+          fontFamily: { sans: ['"Be Vietnam Pro"', 'system-ui', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    .btn-base { @apply inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed; }
+    .btn-primary { @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 active:bg-primary-800; }
+    .btn-secondary { @apply bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:border-slate-400 focus:ring-primary-500 active:bg-slate-100; }
+    .btn-danger { @apply bg-danger text-white hover:bg-danger-dark focus:ring-danger active:bg-danger-dark; }
+    .btn-ghost { @apply text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500; }
+    .btn-ai { @apply bg-ai-purple-600 text-white hover:bg-ai-purple-700 focus:ring-ai-purple-500 active:bg-ai-purple-800; }
+    
+    .badge-base { @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-body-sm font-medium; }
+    
+    .card-hover { @apply transition-all duration-200 hover:shadow-md hover:-translate-y-0.5; }
+    
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+    .pulse-dot::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: inherit;
+      animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .animate-spin-slow { animation: spin 3s linear infinite; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
+  
+  <!-- Header -->
+  <header class="bg-primary-900 text-white py-6 px-8 sticky top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i data-lucide="component" class="w-8 h-8"></i>
+        <div>
+          <h1 class="text-2xl font-bold">Components</h1>
+          <p class="text-primary-200 text-sm">Button, Badge & Card System</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <a href="typography-colors.html" class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
+          <i data-lucide="palette" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Colors</span>
+        </a>
+        <a href="forms-framework.html" class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Forms</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-8 py-12 space-y-16">
+
+    <!-- ==================== BUTTON SYSTEM ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="mouse-pointer-2" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Button System</h2>
+          <p class="text-body-md text-slate-500">5 variants × 4 sizes × 6 states</p>
+        </div>
+      </div>
+
+      <!-- Button Variants -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 space-y-8">
+        
+        <!-- Primary Buttons -->
+        <div>
+          <h3 class="text-body-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Primary Variant</h3>
+          <div class="flex flex-wrap items-center gap-4">
+            <button class="btn-base btn-primary px-3 py-1.5 rounded-md text-sm">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              Small
+            </button>
+            <button class="btn-base btn-primary px-4 py-2 rounded-lg text-body-md">
+              <i data-lucide="save" class="w-4 h-4"></i>
+              Medium
+            </button>
+            <button class="btn-base btn-primary px-6 py-3 rounded-xl text-body-lg">
+              <i data-lucide="check-circle" class="w-5 h-5"></i>
+              Large
+            </button>
+            <button class="btn-base btn-primary px-8 py-4 rounded-xl text-lg">
+              <i data-lucide="rocket" class="w-6 h-6"></i>
+              Extra Large
+            </button>
+          </div>
+        </div>
+
+        <!-- Secondary Buttons -->
+        <div>
+          <h3 class="text-body-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Secondary Variant</h3>
+          <div class="flex flex-wrap items-center gap-4">
+            <button class="btn-base btn-secondary px-3 py-1.5 rounded-md text-sm">Small</button>
+            <button class="btn-base btn-secondary px-4 py-2 rounded-lg text-body-md">Medium</button>
+            <button class="btn-base btn-secondary px-6 py-3 rounded-xl text-body-lg">Large</button>
+            <button class="btn-base btn-secondary px-8 py-4 rounded-xl text-lg">Extra Large</button>
+          </div>
+        </div>
+
+        <!-- Danger Buttons -->
+        <div>
+          <h3 class="text-body-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Danger Variant</h3>
+          <div class="flex flex-wrap items-center gap-4">
+            <button class="btn-base btn-danger px-3 py-1.5 rounded-md text-sm">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+              Xóa
+            </button>
+            <button class="btn-base btn-danger px-4 py-2 rounded-lg text-body-md">
+              <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+              Cảnh báo
+            </button>
+            <button class="btn-base btn-danger px-6 py-3 rounded-xl text-body-lg">
+              <i data-lucide="x-circle" class="w-5 h-5"></i>
+              Hủy bỏ
+            </button>
+          </div>
+        </div>
+
+        <!-- Ghost Buttons -->
+        <div>
+          <h3 class="text-body-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Ghost Variant</h3>
+          <div class="flex flex-wrap items-center gap-4 bg-slate-100 p-4 rounded-lg">
+            <button class="btn-base btn-ghost px-3 py-1.5 rounded-md text-sm">Small</button>
+            <button class="btn-base btn-ghost px-4 py-2 rounded-lg text-body-md">
+              <i data-lucide="edit" class="w-4 h-4"></i>
+              Chỉnh sửa
+            </button>
+            <button class="btn-base btn-ghost px-6 py-3 rounded-xl text-body-lg">
+              <i data-lucide="eye" class="w-5 h-5"></i>
+              Xem chi tiết
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Buttons -->
+        <div>
+          <h3 class="text-body-sm font-semibold text-slate-500 uppercase tracking-wide mb-4 flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-4 h-4 text-ai-purple-600"></i>
+            AI Variant
+          </h3>
+          <div class="flex flex-wrap items-center gap-4">
+            <button class="btn-base btn-ai px-3 py-1.5 rounded-md text-sm">
+              <i data-lucide="wand-2" class="w-4 h-4"></i>
+              AI Analyze
+            </button>
+            <button class="btn-base btn-ai px-4 py-2 rounded-lg text-body-md">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              Tạo bởi AI
+            </button>
+            <button class="btn-base btn-ai px-6 py-3 rounded-xl text-body-lg">
+              <i data-lucide="brain" class="w-5 h-5"></i>
+              AI Assistant
+            </button>
+          </div>
+        </div>
+
+        <!-- Button States -->
+        <div>
+          <h3 class="text-body-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Button States</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="space-y-2">
+              <button class="btn-base btn-primary px-4 py-2 rounded-lg w-full">Default</button>
+              <p class="text-body-sm text-slate-500 text-center">Normal state</p>
+            </div>
+            <div class="space-y-2">
+              <button class="btn-base btn-primary px-4 py-2 rounded-lg w-full hover:bg-primary-700">Hover</button>
+              <p class="text-body-sm text-slate-500 text-center">:hover</p>
+            </div>
+            <div class="space-y-2">
+              <button class="btn-base btn-primary px-4 py-2 rounded-lg w-full opacity-50 cursor-not-allowed" disabled>Disabled</button>
+              <p class="text-body-sm text-slate-500 text-center">:disabled</p>
+            </div>
+            <div class="space-y-2">
+              <button class="btn-base btn-primary px-4 py-2 rounded-lg w-full flex items-center justify-center gap-2">
+                <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                Loading
+              </button>
+              <p class="text-body-sm text-slate-500 text-center">Loading state</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STATUS BADGE SYSTEM ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
+          <i data-lucide="tag" class="w-5 h-5 text-success"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Status Badge System</h2>
+          <p class="text-body-md text-slate-500">Dot indicator + label for document states</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <!-- Draft -->
+          <div class="space-y-3">
+            <span class="badge-base bg-slate-100 text-slate-700">
+              <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+              Draft
+            </span>
+            <p class="text-body-sm text-slate-500">Bản nháp</p>
+          </div>
+
+          <!-- Pending -->
+          <div class="space-y-3">
+            <span class="badge-base bg-warning/20 text-warning-dark">
+              <span class="w-2 h-2 rounded-full bg-warning"></span>
+              Pending
+            </span>
+            <p class="text-body-sm text-slate-500">Chờ duyệt</p>
+          </div>
+
+          <!-- Processing -->
+          <div class="space-y-3">
+            <span class="badge-base bg-info/20 text-info-dark">
+              <span class="w-2 h-2 rounded-full bg-info relative">
+                <span class="absolute inset-0 rounded-full bg-info animate-ping"></span>
+              </span>
+              Processing
+            </span>
+            <p class="text-body-sm text-slate-500">Đang xử lý</p>
+          </div>
+
+          <!-- Revision -->
+          <div class="space-y-3">
+            <span class="badge-base bg-warning/20 text-warning-dark">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+              Revision
+            </span>
+            <p class="text-body-sm text-slate-500">Cần chỉnh sửa</p>
+          </div>
+
+          <!-- Approved -->
+          <div class="space-y-3">
+            <span class="badge-base bg-success/20 text-success-dark">
+              <span class="w-2 h-2 rounded-full bg-success"></span>
+              Approved
+            </span>
+            <p class="text-body-sm text-slate-500">Đã duyệt</p>
+          </div>
+
+          <!-- Rejected -->
+          <div class="space-y-3">
+            <span class="badge-base bg-danger/20 text-danger-dark">
+              <span class="w-2 h-2 rounded-full bg-danger"></span>
+              Rejected
+            </span>
+            <p class="text-body-sm text-slate-500">Từ chối</p>
+          </div>
+
+          <!-- Published -->
+          <div class="space-y-3">
+            <span class="badge-base bg-primary-100 text-primary-700">
+              <i data-lucide="globe" class="w-3 h-3"></i>
+              Published
+            </span>
+            <p class="text-body-sm text-slate-500">Đã ban hành</p>
+          </div>
+
+          <!-- Archived -->
+          <div class="space-y-3">
+            <span class="badge-base bg-slate-100 text-slate-600">
+              <i data-lucide="archive" class="w-3 h-3"></i>
+              Archived
+            </span>
+            <p class="text-body-sm text-slate-500">Đã lưu trữ</p>
+          </div>
+        </div>
+
+        <!-- Badge Sizes -->
+        <div class="mt-8 pt-8 border-t border-slate-200">
+          <h3 class="text-body-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Badge Sizes</h3>
+          <div class="flex flex-wrap items-center gap-4">
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-success/20 text-success-dark">
+              <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+              Small
+            </span>
+            <span class="badge-base bg-success/20 text-success-dark">
+              <span class="w-2 h-2 rounded-full bg-success"></span>
+              Default
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-body-md font-medium bg-success/20 text-success-dark">
+              <span class="w-2.5 h-2.5 rounded-full bg-success"></span>
+              Large
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CARD COMPONENTS ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="layout-grid" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Card Components</h2>
+          <p class="text-body-md text-slate-500">Various card patterns for K-Portal</p>
+        </div>
+      </div>
+
+      <!-- Document Card -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 mb-8">
+        <h3 class="text-h3 text-primary-900 mb-6">Document Card</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <!-- Doc Card 1 -->
+          <div class="card-hover bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-4">
+                <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                  <i data-lucide="file-text" class="w-6 h-6 text-primary-600"></i>
+                </div>
+                <span class="badge-base bg-warning/20 text-warning-dark">
+                  <span class="w-2 h-2 rounded-full bg-warning"></span>
+                  Pending
+                </span>
+              </div>
+              <h4 class="font-semibold text-slate-900 mb-1 line-clamp-1">Báo cáo kiểm toán Q1/2024</h4>
+              <p class="text-body-sm text-slate-500 mb-3">PDF • 2.4 MB • 15/03/2024</p>
+              <div class="flex items-center gap-2 text-body-sm text-slate-600">
+                <div class="w-6 h-6 bg-primary-200 rounded-full flex items-center justify-center text-xs font-semibold text-primary-700">TT</div>
+                <span>Trần Toàn</span>
+              </div>
+            </div>
+            <div class="px-5 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+              <span class="text-body-sm text-slate-500">ID: DOC-2024-001</span>
+              <div class="flex gap-1">
+                <button class="p-1.5 hover:bg-slate-200 rounded transition-colors">
+                  <i data-lucide="eye" class="w-4 h-4 text-slate-600"></i>
+                </button>
+                <button class="p-1.5 hover:bg-slate-200 rounded transition-colors">
+                  <i data-lucide="download" class="w-4 h-4 text-slate-600"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doc Card 2 -->
+          <div class="card-hover bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-4">
+                <div class="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center">
+                  <i data-lucide="file-check" class="w-6 h-6 text-success"></i>
+                </div>
+                <span class="badge-base bg-success/20 text-success-dark">
+                  <span class="w-2 h-2 rounded-full bg-success"></span>
+                  Approved
+                </span>
+              </div>
+              <h4 class="font-semibold text-slate-900 mb-1 line-clamp-1">Hợp đồng dịch vụ 2024</h4>
+              <p class="text-body-sm text-slate-500 mb-3">DOCX • 856 KB • 10/03/2024</p>
+              <div class="flex items-center gap-2 text-body-sm text-slate-600">
+                <div class="w-6 h-6 bg-warning-200 rounded-full flex items-center justify-center text-xs font-semibold text-warning-700">LN</div>
+                <span>Lê Nam</span>
+              </div>
+            </div>
+            <div class="px-5 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+              <span class="text-body-sm text-slate-500">ID: DOC-2024-002</span>
+              <div class="flex gap-1">
+                <button class="p-1.5 hover:bg-slate-200 rounded transition-colors">
+                  <i data-lucide="eye" class="w-4 h-4 text-slate-600"></i>
+                </button>
+                <button class="p-1.5 hover:bg-slate-200 rounded transition-colors">
+                  <i data-lucide="download" class="w-4 h-4 text-slate-600"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doc Card 3 - AI Generated -->
+          <div class="card-hover bg-gradient-to-br from-ai-purple-50 to-white rounded-xl border border-ai-purple-200 overflow-hidden">
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-4">
+                <div class="w-12 h-12 bg-ai-purple-100 rounded-lg flex items-center justify-center">
+                  <i data-lucide="sparkles" class="w-6 h-6 text-ai-purple-600"></i>
+                </div>
+                <span class="badge-base bg-ai-purple-100 text-ai-purple-700">
+                  <i data-lucide="wand-2" class="w-3 h-3"></i>
+                  AI Generated
+                </span>
+              </div>
+              <h4 class="font-semibold text-slate-900 mb-1 line-clamp-1">Phân tích rủi ro tự động</h4>
+              <p class="text-body-sm text-slate-500 mb-3">AI Report • Generated 2m ago</p>
+              <div class="flex items-center gap-2">
+                <div class="flex -space-x-2">
+                  <div class="w-6 h-6 bg-primary-200 rounded-full border-2 border-white flex items-center justify-center text-xs font-semibold text-primary-700">AI</div>
+                </div>
+                <span class="text-body-sm text-ai-purple-600 font-medium">GPT-4 Analysis</span>
+              </div>
+            </div>
+            <div class="px-5 py-3 bg-ai-purple-50/50 border-t border-ai-purple-100 flex items-center justify-between">
+              <span class="text-body-sm text-ai-purple-600">Confidence: 94%</span>
+              <div class="flex gap-1">
+                <button class="p-1.5 hover:bg-ai-purple-100 rounded transition-colors">
+                  <i data-lucide="eye" class="w-4 h-4 text-ai-purple-600"></i>
+                </button>
+                <button class="p-1.5 hover:bg-ai-purple-100 rounded transition-colors">
+                  <i data-lucide="refresh-cw" class="w-4 h-4 text-ai-purple-600"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Finding Card -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 mb-8">
+        <h3 class="text-h3 text-primary-900 mb-6">Finding Card (Severity)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Critical Finding -->
+          <div class="rounded-xl border border-danger/30 bg-danger/5 overflow-hidden">
+            <div class="px-5 py-3 bg-danger/10 border-b border-danger/20 flex items-center gap-2">
+              <i data-lucide="alert-octagon" class="w-5 h-5 text-danger"></i>
+              <span class="font-semibold text-danger">Critical</span>
+              <span class="ml-auto text-body-sm text-danger/70">Score: 95/100</span>
+            </div>
+            <div class="p-5">
+              <h4 class="font-semibold text-slate-900 mb-2">Không tuân thủ quy định GDPR</h4>
+              <p class="text-body-sm text-slate-600 mb-4">Dữ liệu cá nhân của khách hàng không được mã hóa đúng cách trong cơ sở dữ liệu.</p>
+              <div class="flex items-center gap-2 text-body-sm">
+                <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i>
+                <span class="text-slate-500">DOC-2024-015</span>
+                <span class="mx-2 text-slate-300">|</span>
+                <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i>
+                <span class="text-slate-500">2 days ago</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Warning Finding -->
+          <div class="rounded-xl border border-warning/30 bg-warning/5 overflow-hidden">
+            <div class="px-5 py-3 bg-warning/10 border-b border-warning/20 flex items-center gap-2">
+              <i data-lucide="alert-triangle" class="w-5 h-5 text-warning"></i>
+              <span class="font-semibold text-warning-dark">Warning</span>
+              <span class="ml-auto text-body-sm text-warning-dark/70">Score: 65/100</span>
+            </div>
+            <div class="p-5">
+              <h4 class="font-semibold text-slate-900 mb-2">Quy trình phê duyệt chậm</h4>
+              <p class="text-body-sm text-slate-600 mb-4">Thời gian phê duyệt hóa đơn vượt quá ngưỡng cho phép 48 giờ.</p>
+              <div class="flex items-center gap-2 text-body-sm">
+                <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i>
+                <span class="text-slate-500">DOC-2024-018</span>
+                <span class="mx-2 text-slate-300">|</span>
+                <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i>
+                <span class="text-slate-500">5 days ago</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info Finding -->
+          <div class="rounded-xl border border-info/30 bg-info/5 overflow-hidden">
+            <div class="px-5 py-3 bg-info/10 border-b border-info/20 flex items-center gap-2">
+              <i data-lucide="info" class="w-5 h-5 text-info"></i>
+              <span class="font-semibold text-info-dark">Info</span>
+              <span class="ml-auto text-body-sm text-info-dark/70">Score: 35/100</span>
+            </div>
+            <div class="p-5">
+              <h4 class="font-semibold text-slate-900 mb-2">Cập nhật tài liệu cần thiết</h4>
+              <p class="text-body-sm text-slate-600 mb-4">Một số tài liệu quy trình cần được cập nhật theo quy định mới.</p>
+              <div class="flex items-center gap-2 text-body-sm">
+                <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i>
+                <span class="text-slate-500">DOC-2024-020</span>
+                <span class="mx-2 text-slate-300">|</span>
+                <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i>
+                <span class="text-slate-500">1 week ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Stat Card -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <h3 class="text-h3 text-primary-900 mb-6">KPI Stat Card</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          
+          <!-- Stat 1 -->
+          <div class="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+              <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                <i data-lucide="file-check" class="w-5 h-5 text-primary-600"></i>
+              </div>
+              <span class="flex items-center gap-1 text-body-sm text-success">
+                <i data-lucide="trending-up" class="w-4 h-4"></i>
+                +12%
+              </span>
+            </div>
+            <p class="text-body-sm text-slate-500 mb-1">Tài liệu đã duyệt</p>
+            <p class="text-h2 text-slate-900">1,284</p>
+          </div>
+
+          <!-- Stat 2 -->
+          <div class="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+              <div class="w-10 h-10 bg-warning/10 rounded-lg flex items-center justify-center">
+                <i data-lucide="clock" class="w-5 h-5 text-warning"></i>
+              </div>
+              <span class="flex items-center gap-1 text-body-sm text-danger">
+                <i data-lucide="trending-down" class="w-4 h-4"></i>
+                -5%
+              </span>
+            </div>
+            <p class="text-body-sm text-slate-500 mb-1">Chờ xử lý</p>
+            <p class="text-h2 text-slate-900">42</p>
+          </div>
+
+          <!-- Stat 3 -->
+          <div class="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+              <div class="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
+                <i data-lucide="check-circle" class="w-5 h-5 text-success"></i>
+              </div>
+              <span class="flex items-center gap-1 text-body-sm text-success">
+                <i data-lucide="trending-up" class="w-4 h-4"></i>
+                +8%
+              </span>
+            </div>
+            <p class="text-body-sm text-slate-500 mb-1">Tỷ lệ phê duyệt</p>
+            <p class="text-h2 text-slate-900">96.8%</p>
+          </div>
+
+          <!-- Stat 4 -->
+          <div class="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+              <div class="w-10 h-10 bg-ai-purple-100 rounded-lg flex items-center justify-center">
+                <i data-lucide="sparkles" class="w-5 h-5 text-ai-purple-600"></i>
+              </div>
+              <span class="flex items-center gap-1 text-body-sm text-ai-purple-600">
+                <i data-lucide="zap" class="w-4 h-4"></i>
+                AI
+              </span>
+            </div>
+            <p class="text-body-sm text-slate-500 mb-1">Phân tích AI</p>
+            <p class="text-h2 text-slate-900">328</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Suggestion Card -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-ai-purple-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="brain" class="w-5 h-5 text-ai-purple-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">AI Suggestion Card</h2>
+          <p class="text-body-md text-slate-500">AI-generated insights and recommendations</p>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-r from-ai-purple-50 to-white rounded-xl border border-ai-purple-200 p-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- AI Suggestion 1 -->
+          <div class="bg-white rounded-xl border border-ai-purple-200 p-5 shadow-sm">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-ai-purple-100 rounded-full flex items-center justify-center shrink-0">
+                <i data-lucide="lightbulb" class="w-5 h-5 text-ai-purple-600"></i>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-semibold text-slate-900 mb-1">Gợi ý cải tiến quy trình</h4>
+                <p class="text-body-sm text-slate-600 mb-3">Phân tích dữ liệu cho thấy việc tự động hóa bước phê duyệt cấp 1 có thể giảm 40% thời gian xử lý.</p>
+                <div class="flex items-center gap-3">
+                  <span class="text-body-sm text-ai-purple-600 font-medium">Confidence: 89%</span>
+                  <button class="text-body-sm text-primary-600 hover:text-primary-700 font-medium">Xem chi tiết →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Suggestion 2 -->
+          <div class="bg-white rounded-xl border border-ai-purple-200 p-5 shadow-sm">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-warning/10 rounded-full flex items-center justify-center shrink-0">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-warning"></i>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-semibold text-slate-900 mb-1">Phát hiện bất thường</h4>
+                <p class="text-body-sm text-slate-600 mb-3">Phát hiện 3 giao dịch có giá trị bất thường trong tháng 3/2024 cần được xem xét kỹ lưỡng.</p>
+                <div class="flex items-center gap-3">
+                  <span class="text-body-sm text-danger font-medium">Risk Level: High</span>
+                  <button class="text-body-sm text-primary-600 hover:text-primary-700 font-medium">Điều tra ngay →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Suggestion 3 -->
+          <div class="bg-white rounded-xl border border-ai-purple-200 p-5 shadow-sm">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-success/10 rounded-full flex items-center justify-center shrink-0">
+                <i data-lucide="check-circle" class="w-5 h-5 text-success"></i>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-semibold text-slate-900 mb-1">Tự động phân loại hoàn tất</h4>
+                <p class="text-body-sm text-slate-600 mb-3">Đã phân loại tự động 156 tài liệu mới với độ chính xác 96.4%.</p>
+                <div class="flex items-center gap-3">
+                  <span class="text-body-sm text-success font-medium">Accuracy: 96.4%</span>
+                  <button class="text-body-sm text-primary-600 hover:text-primary-700 font-medium">Xem kết quả →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Processing Card -->
+          <div class="bg-ai-purple-50 rounded-xl border border-ai-purple-200 p-5 flex items-center justify-center">
+            <div class="text-center">
+              <div class="w-12 h-12 bg-ai-purple-100 rounded-full flex items-center justify-center mx-auto mb-3 animate-pulse">
+                <i data-lucide="sparkles" class="w-6 h-6 text-ai-purple-600"></i>
+              </div>
+              <p class="text-body-md text-ai-purple-700 font-medium">AI đang phân tích...</p>
+              <p class="text-body-sm text-ai-purple-600 mt-1">Ước tính còn 2 phút</p>
+              <div class="w-48 h-2 bg-ai-purple-200 rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-ai-purple-600 rounded-full" style="width: 65%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Navigation -->
+  <footer class="bg-white border-t border-slate-200 py-8 px-8">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <p class="text-body-sm text-slate-500">K-Portal Framework v1.0</p>
+      <div class="flex gap-4">
+        <a href="typography-colors.html" class="text-body-sm text-primary-600 hover:text-primary-700">Colors</a>
+        <a href="layout-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Layout</a>
+        <a href="forms-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Forms</a>
+        <a href="feedback-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Feedback</a>
+        <a href="data-display-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Data Display</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

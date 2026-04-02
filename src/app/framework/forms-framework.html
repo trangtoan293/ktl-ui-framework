@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-Portal | Forms Framework</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 300: '#93C5FD', 400: '#60A5FA', 500: '#3B82D4', 600: '#2563B0', 700: '#1E4D8C', 800: '#153666', 900: '#0C2340' },
+            success: { DEFAULT: '#22C55E', light: '#F0FDF4', dark: '#166534' },
+            warning: { DEFAULT: '#F59E0B', light: '#FFFBEB', dark: '#92400E' },
+            danger: { DEFAULT: '#EF4444', light: '#FEF2F2', dark: '#991B1B' },
+            info: { DEFAULT: '#3B82F6', light: '#EFF6FF', dark: '#1E40AF' },
+            ai: { purple: { 100: '#EDE9FE', 200: '#DDD6FE', 300: '#C4B5FD', 400: '#A78BFA', 500: '#8B5CF6', 600: '#7C3AED', 700: '#6D28D9', 800: '#5B21B6', 900: '#4C1D95' }}
+          },
+          fontFamily: { sans: ['"Be Vietnam Pro"', 'system-ui', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    .form-input { @apply w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-body-md text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all; }
+    .form-input-error { @apply border-danger focus:ring-danger focus:border-danger; }
+    .form-input-success { @apply border-success focus:ring-success focus:border-success; }
+    .form-label { @apply block text-body-sm font-medium text-slate-700 mb-1.5; }
+    .form-hint { @apply mt-1.5 text-body-sm text-slate-500; }
+    .form-error { @apply mt-1.5 text-body-sm text-danger flex items-center gap-1; }
+    
+    .checkbox-wrapper { @apply flex items-start gap-3 cursor-pointer; }
+    .checkbox-input { @apply w-5 h-5 rounded border-slate-300 text-primary-600 focus:ring-primary-500 cursor-pointer mt-0.5; }
+    .radio-wrapper { @apply flex items-center gap-3 cursor-pointer; }
+    .radio-input { @apply w-5 h-5 border-slate-300 text-primary-600 focus:ring-primary-500 cursor-pointer; }
+    
+    .dropzone { @apply border-2 border-dashed border-slate-300 rounded-xl p-8 text-center transition-all cursor-pointer hover:border-primary-400 hover:bg-primary-50; }
+    .dropzone.dragover { @apply border-primary-500 bg-primary-50; }
+    
+    .switch { @apply relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2; }
+    .switch-enabled { @apply bg-primary-600; }
+    .switch-disabled { @apply bg-slate-200; }
+    .switch-thumb { @apply inline-block h-4 w-4 transform rounded-full bg-white transition-transform; }
+    
+    .select-wrapper { @apply relative; }
+    .select-icon { @apply absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
+  
+  <!-- Header -->
+  <header class="bg-primary-900 text-white py-6 px-8 sticky top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i data-lucide="form-input" class="w-8 h-8"></i>
+        <div>
+          <h1 class="text-2xl font-bold">Forms</h1>
+          <p class="text-primary-200 text-sm">Input Components & Form Patterns</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <a href="components-framework.html" class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Components</span>
+        </a>
+        <a href="feedback-framework.html" class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Feedback</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-8 py-12 space-y-16">
+
+    <!-- ==================== INPUT COMPONENTS ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="type" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Input Components</h2>
+          <p class="text-body-md text-slate-500">Text, password, number, date inputs</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          <!-- Text Input -->
+          <div class="space-y-6">
+            <div>
+              <label class="form-label">Text Input (Default)</label>
+              <input type="text" class="form-input" placeholder="Nhập họ và tên">
+              <p class="form-hint">Hỗ trợ tiếng Việt có dấu</p>
+            </div>
+
+            <div>
+              <label class="form-label">Text Input with Icon</label>
+              <div class="relative">
+                <i data-lucide="user" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                <input type="text" class="form-input pl-10" placeholder="Nhập họ và tên">
+              </div>
+            </div>
+
+            <div>
+              <label class="form-label">Disabled Input</label>
+              <input type="text" class="form-input bg-slate-50 cursor-not-allowed" value="Giá trị cố định" disabled>
+            </div>
+
+            <div>
+              <label class="form-label">Read Only</label>
+              <input type="text" class="form-input bg-slate-50" value="Không thể chỉnh sửa" readonly>
+            </div>
+          </div>
+
+          <!-- States -->
+          <div class="space-y-6">
+            <div>
+              <label class="form-label">Success State</label>
+              <div class="relative">
+                <input type="text" class="form-input form-input-success pr-10" value="toan.tran@gtel.com">
+                <i data-lucide="check-circle" class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-success"></i>
+              </div>
+              <p class="form-hint text-success">Email hợp lệ</p>
+            </div>
+
+            <div>
+              <label class="form-label">Error State</label>
+              <div class="relative">
+                <input type="text" class="form-input form-input-error pr-10" value="invalid-email">
+                <i data-lucide="alert-circle" class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-danger"></i>
+              </div>
+              <p class="form-error">
+                <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                Email không đúng định dạng
+              </p>
+            </div>
+
+            <div>
+              <label class="form-label">Password Input</label>
+              <div class="relative">
+                <input type="password" class="form-input pr-10" value="password123" id="passwordInput">
+                <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                  <i data-lucide="eye" class="w-5 h-5" id="eyeIcon"></i>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label class="form-label">Search Input</label>
+              <div class="relative">
+                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                <input type="search" class="form-input pl-10" placeholder="Tìm kiếm tài liệu...">
+                <kbd class="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-0.5 bg-slate-100 text-slate-500 text-xs rounded border border-slate-200 hidden sm:block">⌘K</kbd>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Number & Date Inputs -->
+        <div class="mt-8 pt-8 border-t border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label class="form-label">Number Input</label>
+            <input type="number" class="form-input" placeholder="0" min="0" max="100">
+          </div>
+
+          <div>
+            <label class="form-label">Date Input</label>
+            <input type="date" class="form-input">
+          </div>
+
+          <div>
+            <label class="form-label">DateTime Input</label>
+            <input type="datetime-local" class="form-input">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SELECT / DROPDOWN ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="list-filter" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Select & Dropdown</h2>
+          <p class="text-body-md text-slate-500">Single and multi-select components</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          <!-- Basic Select -->
+          <div class="space-y-6">
+            <div>
+              <label class="form-label">Basic Select</label>
+              <div class="select-wrapper">
+                <select class="form-input appearance-none pr-10">
+                  <option value="">Chọn phòng ban</option>
+                  <option value="audit">Kiểm toán</option>
+                  <option value="finance">Tài chính</option>
+                  <option value="hr">Nhân sự</option>
+                  <option value="it">IT</option>
+                </select>
+                <i data-lucide="chevron-down" class="select-icon w-5 h-5"></i>
+              </div>
+            </div>
+
+            <!-- Custom Dropdown -->
+            <div>
+              <label class="form-label">Custom Dropdown</label>
+              <div class="relative" id="customDropdown">
+                <button type="button" onclick="toggleDropdown()" class="form-input text-left flex items-center justify-between w-full">
+                  <span class="text-slate-500">Chọn trạng thái</span>
+                  <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform" id="dropdownIcon"></i>
+                </button>
+                <div class="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg hidden" id="dropdownMenu">
+                  <div class="py-1">
+                    <button class="w-full px-4 py-2 text-left text-body-md hover:bg-slate-50 flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-warning"></span>
+                      Chờ duyệt
+                    </button>
+                    <button class="w-full px-4 py-2 text-left text-body-md hover:bg-slate-50 flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-success"></span>
+                      Đã duyệt
+                    </button>
+                    <button class="w-full px-4 py-2 text-left text-body-md hover:bg-slate-50 flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-danger"></span>
+                      Từ chối
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Multi-select Tags -->
+          <div class="space-y-6">
+            <div>
+              <label class="form-label">Multi-select with Tags</label>
+              <div class="form-input min-h-[46px] py-2 flex flex-wrap gap-2">
+                <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary-100 text-primary-700 rounded text-sm">
+                  Kiểm toán
+                  <button class="hover:text-primary-900"><i data-lucide="x" class="w-3 h-3"></i></button>
+                </span>
+                <span class="inline-flex items-center gap-1 px-2 py-1 bg-success/20 text-success-dark rounded text-sm">
+                  Tài chính
+                  <button class="hover:text-success"><i data-lucide="x" class="w-3 h-3"></i></button>
+                </span>
+                <input type="text" class="flex-1 min-w-[100px] outline-none text-body-md" placeholder="+ Thêm">
+              </div>
+            </div>
+
+            <!-- Grouped Select -->
+            <div>
+              <label class="form-label">Grouped Select</label>
+              <div class="select-wrapper">
+                <select class="form-input appearance-none pr-10">
+                  <optgroup label="Tài liệu">
+                    <option>Báo cáo tài chính</option>
+                    <option>Hợp đồng</option>
+                    <option>Biên bản</option>
+                  </optgroup>
+                  <optgroup label="Rule Set">
+                    <option>Quy định nội bộ</option>
+                    <option>Chính sách</option>
+                    <option>Quy trình</option>
+                  </optgroup>
+                </select>
+                <i data-lucide="chevron-down" class="select-icon w-5 h-5"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TEXTAREA ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="align-left" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Textarea</h2>
+          <p class="text-body-md text-slate-500">Multi-line text input</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div class="space-y-6">
+          <div>
+            <label class="form-label">Basic Textarea</label>
+            <textarea class="form-input min-h-[120px] resize-y" placeholder="Nhập mô tả chi tiết..."></textarea>
+            <p class="form-hint">Tối đa 500 ký tự</p>
+          </div>
+
+          <div>
+            <label class="form-label">Textarea with Character Count</label>
+            <textarea class="form-input min-h-[100px] resize-y" placeholder="Nhập nội dung..." maxlength="200" oninput="updateCharCount(this)"></textarea>
+            <div class="flex justify-between mt-1.5">
+              <p class="form-hint">Mô tả ngắn gọn về vấn đề</p>
+              <span class="text-body-sm text-slate-400" id="charCount">0/200</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="form-label">Rich Text Editor (Simulated)</label>
+            <div class="border border-slate-300 rounded-lg overflow-hidden">
+              <div class="flex items-center gap-1 px-3 py-2 bg-slate-50 border-b border-slate-200">
+                <button class="p-1.5 hover:bg-slate-200 rounded transition-colors"><i data-lucide="bold" class="w-4 h-4 text-slate-600"></i></button>
+                <button class="p-1.5 hover:bg-slate-200 rounded transition-colors"><i data-lucide="italic" class="w-4 h-4 text-slate-600"></i></button>
+                <button class="p-1.5 hover:bg-slate-200 rounded transition-colors"><i data-lucide="underline" class="w-4 h-4 text-slate-600"></i></button>
+                <div class="w-px h-5 bg-slate-300 mx-1"></div>
+                <button class="p-1.5 hover:bg-slate-200 rounded transition-colors"><i data-lucide="list" class="w-4 h-4 text-slate-600"></i></button>
+                <button class="p-1.5 hover:bg-slate-200 rounded transition-colors"><i data-lucide="list-ordered" class="w-4 h-4 text-slate-600"></i></button>
+                <div class="w-px h-5 bg-slate-300 mx-1"></div>
+                <button class="p-1.5 hover:bg-slate-200 rounded transition-colors"><i data-lucide="link" class="w-4 h-4 text-slate-600"></i></button>
+              </div>
+              <textarea class="w-full px-4 py-3 min-h-[150px] resize-y outline-none text-body-md" placeholder="Nhập nội dung..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CHECKBOX & RADIO ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="check-square" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Checkbox & Radio</h2>
+          <p class="text-body-md text-slate-500">Selection controls</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Checkbox -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+          <h3 class="text-h3 text-primary-900 mb-6">Checkbox</h3>
+          
+          <div class="space-y-4">
+            <label class="checkbox-wrapper">
+              <input type="checkbox" class="checkbox-input" checked>
+              <div>
+                <span class="text-body-md text-slate-900 font-medium">Đã chọn</span>
+                <p class="text-body-sm text-slate-500">Mô tả cho option này</p>
+              </div>
+            </label>
+
+            <label class="checkbox-wrapper">
+              <input type="checkbox" class="checkbox-input">
+              <div>
+                <span class="text-body-md text-slate-900 font-medium">Chưa chọn</span>
+                <p class="text-body-sm text-slate-500">Mô tả cho option này</p>
+              </div>
+            </label>
+
+            <label class="checkbox-wrapper">
+              <input type="checkbox" class="checkbox-input" disabled>
+              <div>
+                <span class="text-body-md text-slate-400 font-medium">Disabled</span>
+                <p class="text-body-sm text-slate-400">Không thể tương tác</p>
+              </div>
+            </label>
+
+            <div class="pt-4 border-t border-slate-200">
+              <p class="form-label mb-3">Checkbox Group</p>
+              <div class="space-y-3">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" class="checkbox-input" checked>
+                  <span class="text-body-md text-slate-700">Kiểm toán tài chính</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" class="checkbox-input" checked>
+                  <span class="text-body-md text-slate-700">Kiểm toán tuân thủ</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" class="checkbox-input">
+                  <span class="text-body-md text-slate-700">Kiểm toán vận hành</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Radio -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+          <h3 class="text-h3 text-primary-900 mb-6">Radio Button</h3>
+          
+          <div class="space-y-4">
+            <label class="radio-wrapper">
+              <input type="radio" name="radio-group" class="radio-input" checked>
+              <div>
+                <span class="text-body-md text-slate-900 font-medium">Đã chọn</span>
+                <p class="text-body-sm text-slate-500">Mô tả cho option này</p>
+              </div>
+            </label>
+
+            <label class="radio-wrapper">
+              <input type="radio" name="radio-group" class="radio-input">
+              <div>
+                <span class="text-body-md text-slate-900 font-medium">Chưa chọn</span>
+                <p class="text-body-sm text-slate-500">Mô tả cho option này</p>
+              </div>
+            </label>
+
+            <label class="radio-wrapper">
+              <input type="radio" name="radio-group" class="radio-input" disabled>
+              <div>
+                <span class="text-body-md text-slate-400 font-medium">Disabled</span>
+                <p class="text-body-sm text-slate-400">Không thể tương tác</p>
+              </div>
+            </label>
+
+            <div class="pt-4 border-t border-slate-200">
+              <p class="form-label mb-3">Radio Group (Horizontal)</p>
+              <div class="flex flex-wrap gap-4">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="priority" class="radio-input" checked>
+                  <span class="text-body-md text-slate-700">Cao</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="priority" class="radio-input">
+                  <span class="text-body-md text-slate-700">Trung bình</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="priority" class="radio-input">
+                  <span class="text-body-md text-slate-700">Thấp</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== FILE UPLOAD ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="upload" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">File Upload</h2>
+          <p class="text-body-md text-slate-500">Dropzone and file input components</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div class="space-y-8">
+          <!-- Dropzone -->
+          <div>
+            <label class="form-label">Upload Documents (Dropzone)</label>
+            <div class="dropzone" id="dropzone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+              <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="upload-cloud" class="w-8 h-8 text-primary-600"></i>
+              </div>
+              <p class="text-body-lg text-slate-700 font-medium mb-2">Kéo thả file vào đây</p>
+              <p class="text-body-md text-slate-500 mb-4">hoặc <button class="text-primary-600 hover:text-primary-700 font-medium">chọn file</button> từ máy tính</p>
+              <p class="text-body-sm text-slate-400">Hỗ trợ: PDF, DOC, DOCX, XLS, XLSX (Tối đa 50MB)</p>
+            </div>
+          </div>
+
+          <!-- File List -->
+          <div>
+            <label class="form-label mb-3">Uploaded Files</label>
+            <div class="space-y-3">
+              <!-- File Item 1 -->
+              <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <div class="w-10 h-10 bg-danger/10 rounded-lg flex items-center justify-center">
+                  <i data-lucide="file-text" class="w-5 h-5 text-danger"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-body-md text-slate-900 font-medium truncate">Báo_cáo_tài_chính_Q1_2024.pdf</p>
+                  <div class="flex items-center gap-2 text-body-sm text-slate-500">
+                    <span>PDF</span>
+                    <span>•</span>
+                    <span>2.4 MB</span>
+                    <span>•</span>
+                    <span class="text-success">Đã upload</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button class="p-2 hover:bg-slate-200 rounded-lg transition-colors">
+                    <i data-lucide="eye" class="w-4 h-4 text-slate-600"></i>
+                  </button>
+                  <button class="p-2 hover:bg-slate-200 rounded-lg transition-colors">
+                    <i data-lucide="trash-2" class="w-4 h-4 text-danger"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- File Item 2 - Uploading -->
+              <div class="flex items-center gap-4 p-4 bg-primary-50 rounded-lg border border-primary-200">
+                <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                  <i data-lucide="file-spreadsheet" class="w-5 h-5 text-primary-600"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-body-md text-slate-900 font-medium truncate">Du_lieu_kiem_toan_2024.xlsx</p>
+                  <div class="flex items-center gap-3 mt-2">
+                    <div class="flex-1 h-2 bg-primary-200 rounded-full overflow-hidden">
+                      <div class="h-full bg-primary-600 rounded-full transition-all" style="width: 65%"></div>
+                    </div>
+                    <span class="text-body-sm text-primary-700 font-medium">65%</span>
+                  </div>
+                </div>
+                <button class="p-2 hover:bg-primary-200 rounded-lg transition-colors">
+                  <i data-lucide="x" class="w-4 h-4 text-primary-600"></i>
+                </button>
+              </div>
+
+              <!-- File Item 3 - Error -->
+              <div class="flex items-center gap-4 p-4 bg-danger/5 rounded-lg border border-danger/20">
+                <div class="w-10 h-10 bg-danger/10 rounded-lg flex items-center justify-center">
+                  <i data-lucide="file-x" class="w-5 h-5 text-danger"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-body-md text-slate-900 font-medium truncate">File_qua_lon.zip</p>
+                  <p class="text-body-sm text-danger">File vượt quá kích thước cho phép (50MB)</p>
+                </div>
+                <button class="p-2 hover:bg-danger/10 rounded-lg transition-colors">
+                  <i data-lucide="trash-2" class="w-4 h-4 text-danger"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TOGGLE SWITCH ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="toggle-left" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Toggle Switch</h2>
+          <p class="text-body-md text-slate-500">On/off state controls</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="space-y-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-body-md text-slate-900 font-medium">Thông báo email</p>
+                <p class="text-body-sm text-slate-500">Nhận thông báo qua email</p>
+              </div>
+              <button type="button" onclick="toggleSwitch(this)" class="switch switch-enabled" aria-checked="true">
+                <span class="switch-thumb translate-x-6"></span>
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-body-md text-slate-900 font-medium">Chế độ tối</p>
+                <p class="text-body-sm text-slate-500">Giao diện tối cho hệ thống</p>
+              </div>
+              <button type="button" onclick="toggleSwitch(this)" class="switch switch-disabled" aria-checked="false">
+                <span class="switch-thumb translate-x-1"></span>
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-body-md text-slate-400 font-medium">Tự động lưu</p>
+                <p class="text-body-sm text-slate-400">Không thể tắt</p>
+              </div>
+              <button type="button" class="switch switch-enabled opacity-50 cursor-not-allowed" disabled aria-checked="true">
+                <span class="switch-thumb translate-x-6"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <p class="form-label">Settings Group</p>
+            <div class="bg-slate-50 rounded-lg p-4 space-y-4">
+              <label class="flex items-center justify-between cursor-pointer">
+                <span class="text-body-md text-slate-700">Hiện preview</span>
+                <input type="checkbox" class="sr-only peer" checked>
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600 relative"></div>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer">
+                <span class="text-body-md text-slate-700">Tự động phân tích AI</span>
+                <input type="checkbox" class="sr-only peer">
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-ai-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-ai-purple-600 relative"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== FORM LAYOUTS ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="layout-template" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Form Layouts</h2>
+          <p class="text-body-md text-slate-500">Common form patterns</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Login Form -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+          <h3 class="text-h3 text-primary-900 mb-6">Login Form</h3>
+          <form class="space-y-5">
+            <div>
+              <label class="form-label">Email</label>
+              <div class="relative">
+                <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                <input type="email" class="form-input pl-10" placeholder="you@company.com">
+              </div>
+            </div>
+            <div>
+              <label class="form-label">Mật khẩu</label>
+              <div class="relative">
+                <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                <input type="password" class="form-input pl-10" placeholder="••••••••">
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" class="checkbox-input">
+                <span class="text-body-sm text-slate-600">Ghi nhớ đăng nhập</span>
+              </label>
+              <a href="#" class="text-body-sm text-primary-600 hover:text-primary-700">Quên mật khẩu?</a>
+            </div>
+            <button type="submit" class="w-full btn-base btn-primary py-2.5 rounded-lg">
+              Đăng nhập
+            </button>
+          </form>
+        </div>
+
+        <!-- Create Document Form -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+          <h3 class="text-h3 text-primary-900 mb-6">Create Document</h3>
+          <form class="space-y-5">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="form-label">Loại tài liệu <span class="text-danger">*</span></label>
+                <div class="select-wrapper">
+                  <select class="form-input appearance-none pr-10">
+                    <option>Chọn loại</option>
+                    <option>Báo cáo</option>
+                    <option>Hợp đồng</option>
+                    <option>Biên bản</option>
+                  </select>
+                  <i data-lucide="chevron-down" class="select-icon w-5 h-5"></i>
+                </div>
+              </div>
+              <div>
+                <label class="form-label">Phòng ban</label>
+                <div class="select-wrapper">
+                  <select class="form-input appearance-none pr-10">
+                    <option>Kiểm toán</option>
+                    <option>Tài chính</option>
+                    <option>Nhân sự</option>
+                  </select>
+                  <i data-lucide="chevron-down" class="select-icon w-5 h-5"></i>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label class="form-label">Tiêu đề <span class="text-danger">*</span></label>
+              <input type="text" class="form-input" placeholder="Nhập tiêu đề tài liệu">
+            </div>
+            <div>
+              <label class="form-label">Mô tả</label>
+              <textarea class="form-input min-h-[80px] resize-y" placeholder="Mô tả ngắn..."></textarea>
+            </div>
+            <div class="flex items-center gap-3 pt-2">
+              <button type="submit" class="btn-base btn-primary px-6 py-2.5 rounded-lg">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                Tạo mới
+              </button>
+              <button type="button" class="btn-base btn-secondary px-6 py-2.5 rounded-lg">
+                Hủy
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Navigation -->
+  <footer class="bg-white border-t border-slate-200 py-8 px-8">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <p class="text-body-sm text-slate-500">K-Portal Framework v1.0</p>
+      <div class="flex gap-4">
+        <a href="typography-colors.html" class="text-body-sm text-primary-600 hover:text-primary-700">Colors</a>
+        <a href="layout-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Layout</a>
+        <a href="components-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Components</a>
+        <a href="feedback-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Feedback</a>
+        <a href="data-display-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Data Display</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    // Toggle password visibility
+    function togglePassword() {
+      const input = document.getElementById('passwordInput');
+      const icon = document.getElementById('eyeIcon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.setAttribute('data-lucide', 'eye-off');
+      } else {
+        input.type = 'password';
+        icon.setAttribute('data-lucide', 'eye');
+      }
+      lucide.createIcons();
+    }
+
+    // Character count
+    function updateCharCount(textarea) {
+      const count = textarea.value.length;
+      const max = textarea.getAttribute('maxlength');
+      document.getElementById('charCount').textContent = `${count}/${max}`;
+    }
+
+    // Dropdown toggle
+    function toggleDropdown() {
+      const menu = document.getElementById('dropdownMenu');
+      const icon = document.getElementById('dropdownIcon');
+      menu.classList.toggle('hidden');
+      icon.style.transform = menu.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
+    // Toggle switch
+    function toggleSwitch(button) {
+      const isEnabled = button.getAttribute('aria-checked') === 'true';
+      const thumb = button.querySelector('.switch-thumb');
+      
+      if (isEnabled) {
+        button.setAttribute('aria-checked', 'false');
+        button.classList.remove('switch-enabled');
+        button.classList.add('switch-disabled');
+        thumb.classList.remove('translate-x-6');
+        thumb.classList.add('translate-x-1');
+      } else {
+        button.setAttribute('aria-checked', 'true');
+        button.classList.remove('switch-disabled');
+        button.classList.add('switch-enabled');
+        thumb.classList.remove('translate-x-1');
+        thumb.classList.add('translate-x-6');
+      }
+    }
+
+    // Dropzone handlers
+    function handleDragOver(e) {
+      e.preventDefault();
+      document.getElementById('dropzone').classList.add('dragover');
+    }
+
+    function handleDragLeave(e) {
+      e.preventDefault();
+      document.getElementById('dropzone').classList.remove('dragover');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      document.getElementById('dropzone').classList.remove('dragover');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const dropdown = document.getElementById('customDropdown');
+      if (!dropdown.contains(e.target)) {
+        document.getElementById('dropdownMenu').classList.add('hidden');
+        document.getElementById('dropdownIcon').style.transform = 'rotate(0deg)';
+      }
+    });
+  </script>
+</body>
+</html>

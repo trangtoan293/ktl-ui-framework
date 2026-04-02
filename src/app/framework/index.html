@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-Portal | UI Framework</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 300: '#93C5FD', 400: '#60A5FA', 500: '#3B82D4', 600: '#2563B0', 700: '#1E4D8C', 800: '#153666', 900: '#0C2340' },
+            success: { DEFAULT: '#22C55E', light: '#F0FDF4', dark: '#166534' },
+            warning: { DEFAULT: '#F59E0B', light: '#FFFBEB', dark: '#92400E' },
+            danger: { DEFAULT: '#EF4444', light: '#FEF2F2', dark: '#991B1B' },
+            info: { DEFAULT: '#3B82F6', light: '#EFF6FF', dark: '#1E40AF' },
+            ai: { purple: { 100: '#EDE9FE', 500: '#8B5CF6', 600: '#7C3AED', 700: '#6D28D9' }}
+          },
+          fontFamily: { sans: ['"Be Vietnam Pro"', 'system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
+  
+  <!-- Hero Section -->
+  <div class="bg-primary-900 text-white py-16 px-8">
+    <div class="max-w-5xl mx-auto text-center">
+      <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+        <i data-lucide="shield-check" class="w-10 h-10"></i>
+      </div>
+      <h1 class="text-display-lg mb-4">K-Portal UI Framework</h1>
+      <p class="text-body-lg text-primary-200 mb-8 max-w-2xl mx-auto">
+        Framework UI mẫu đầy đủ các thành phần cho ứng dụng K-Portal - Audit Intelligence Platform
+      </p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <span class="px-3 py-1 bg-white/10 rounded-full text-sm">Tailwind CSS</span>
+        <span class="px-3 py-1 bg-white/10 rounded-full text-sm">Responsive</span>
+        <span class="px-3 py-1 bg-white/10 rounded-full text-sm">Design System</span>
+        <span class="px-3 py-1 bg-ai-purple-500/50 rounded-full text-sm">AI Ready</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="max-w-5xl mx-auto px-8 py-16">
+    
+    <!-- Framework Files -->
+    <section class="mb-16">
+      <h2 class="text-h2 text-primary-900 mb-8 text-center">Framework Files</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Typography & Colors -->
+        <a href="typography-colors.html" class="group bg-white rounded-xl border border-slate-200 p-6 hover:shadow-lg hover:border-primary-300 transition-all">
+          <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors">
+            <i data-lucide="palette" class="w-6 h-6 text-primary-600"></i>
+          </div>
+          <h3 class="text-h3 text-slate-900 mb-2">Typography & Colors</h3>
+          <p class="text-body-md text-slate-500">Style guide với color tokens, typography scale, và design tokens</p>
+          <div class="mt-4 flex items-center text-primary-600 text-sm font-medium">
+            Xem chi tiết
+            <i data-lucide="arrow-right" class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"></i>
+          </div>
+        </a>
+
+        <!-- Layout -->
+        <a href="layout-framework.html" class="group bg-white rounded-xl border border-slate-200 p-6 hover:shadow-lg hover:border-primary-300 transition-all">
+          <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors">
+            <i data-lucide="layout" class="w-6 h-6 text-primary-600"></i>
+          </div>
+          <h3 class="text-h3 text-slate-900 mb-2">Layout Framework</h3>
+          <p class="text-body-md text-slate-500">Sidebar navigation, top bar, breadcrumbs, tabs, và page layouts</p>
+          <div class="mt-4 flex items-center text-primary-600 text-sm font-medium">
+            Xem chi tiết
+            <i data-lucide="arrow-right" class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"></i>
+          </div>
+        </a>
+
+        <!-- Components -->
+        <a href="components-framework.html" class="group bg-white rounded-xl border border-slate-200 p-6 hover:shadow-lg hover:border-primary-300 transition-all">
+          <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors">
+            <i data-lucide="component" class="w-6 h-6 text-primary-600"></i>
+          </div>
+          <h3 class="text-h3 text-slate-900 mb-2">Components</h3>
+          <p class="text-body-md text-slate-500">Button system, status badges, document cards, finding cards, KPI cards</p>
+          <div class="mt-4 flex items-center text-primary-600 text-sm font-medium">
+            Xem chi tiết
+            <i data-lucide="arrow-right" class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"></i>
+          </div>
+        </a>
+
+        <!-- Forms -->
+        <a href="forms-framework.html" class="group bg-white rounded-xl border border-slate-200 p-6 hover:shadow-lg hover:border-primary-300 transition-all">
+          <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors">
+            <i data-lucide="form-input" class="w-6 h-6 text-primary-600"></i>
+          </div>
+          <h3 class="text-h3 text-slate-900 mb-2">Forms</h3>
+          <p class="text-body-md text-slate-500">Input fields, select dropdowns, checkboxes, radios, file upload, toggles</p>
+          <div class="mt-4 flex items-center text-primary-600 text-sm font-medium">
+            Xem chi tiết
+            <i data-lucide="arrow-right" class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"></i>
+          </div>
+        </a>
+
+        <!-- Feedback -->
+        <a href="feedback-framework.html" class="group bg-white rounded-xl border border-slate-200 p-6 hover:shadow-lg hover:border-primary-300 transition-all">
+          <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors">
+            <i data-lucide="message-square" class="w-6 h-6 text-primary-600"></i>
+          </div>
+          <h3 class="text-h3 text-slate-900 mb-2">Feedback</h3>
+          <p class="text-body-md text-slate-500">Toast notifications, modals, loading states, skeletons, empty states</p>
+          <div class="mt-4 flex items-center text-primary-600 text-sm font-medium">
+            Xem chi tiết
+            <i data-lucide="arrow-right" class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"></i>
+          </div>
+        </a>
+
+        <!-- Data Display -->
+        <a href="data-display-framework.html" class="group bg-white rounded-xl border border-slate-200 p-6 hover:shadow-lg hover:border-primary-300 transition-all">
+          <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors">
+            <i data-lucide="table-2" class="w-6 h-6 text-primary-600"></i>
+          </div>
+          <h3 class="text-h3 text-slate-900 mb-2">Data Display</h3>
+          <p class="text-body-md text-slate-500">Data tables, pagination, trust score gauge, progress indicators</p>
+          <div class="mt-4 flex items-center text-primary-600 text-sm font-medium">
+            Xem chi tiết
+            <i data-lucide="arrow-right" class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"></i>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Design System Summary -->
+    <section class="mb-16">
+      <h2 class="text-h2 text-primary-900 mb-8 text-center">Design System</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Colors -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6">
+          <h3 class="text-h3 text-slate-900 mb-4 flex items-center gap-2">
+            <i data-lucide="droplet" class="w-5 h-5 text-primary-600"></i>
+            Colors
+          </h3>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-primary-600"></div>
+              <div>
+                <p class="text-sm font-medium text-slate-900">Primary</p>
+                <p class="text-xs text-slate-500">#2563B0</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-success"></div>
+              <div>
+                <p class="text-sm font-medium text-slate-900">Success</p>
+                <p class="text-xs text-slate-500">#22C55E</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-danger"></div>
+              <div>
+                <p class="text-sm font-medium text-slate-900">Danger</p>
+                <p class="text-xs text-slate-500">#EF4444</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-ai-purple-600"></div>
+              <div>
+                <p class="text-sm font-medium text-slate-900">AI Purple</p>
+                <p class="text-xs text-slate-500">#7C3AED</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typography -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6">
+          <h3 class="text-h3 text-slate-900 mb-4 flex items-center gap-2">
+            <i data-lucide="type" class="w-5 h-5 text-primary-600"></i>
+            Typography
+          </h3>
+          <div class="space-y-2">
+            <p class="text-2xl font-bold text-slate-900">Display 48/56</p>
+            <p class="text-xl font-bold text-slate-900">Heading 1 - 36/44</p>
+            <p class="text-lg font-semibold text-slate-900">Heading 2 - 28/36</p>
+            <p class="text-base text-slate-700">Body Large - 16/24</p>
+            <p class="text-sm text-slate-600">Body Medium - 14/20</p>
+            <p class="text-xs text-slate-500">Body Small - 12/18</p>
+          </div>
+          <div class="mt-4 pt-4 border-t border-slate-200">
+            <p class="text-sm text-slate-600">
+              <span class="font-medium">Font:</span> Be Vietnam Pro
+            </p>
+            <p class="text-sm text-slate-600">
+              <span class="font-medium">Mono:</span> JetBrains Mono
+            </p>
+          </div>
+        </div>
+
+        <!-- Layout -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6">
+          <h3 class="text-h3 text-slate-900 mb-4 flex items-center gap-2">
+            <i data-lucide="maximize" class="w-5 h-5 text-primary-600"></i>
+            Layout
+          </h3>
+          <div class="space-y-3">
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-600">Container max</span>
+              <span class="font-mono text-slate-900">1440px</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-600">Content max</span>
+              <span class="font-mono text-slate-900">1200px</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-600">Sidebar expanded</span>
+              <span class="font-mono text-slate-900">240px</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-600">Sidebar collapsed</span>
+              <span class="font-mono text-slate-900">72px</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-600">Gutter</span>
+              <span class="font-mono text-slate-900">24px</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-600">Border Radius</span>
+              <span class="font-mono text-slate-900">4/8/12/16px</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Links -->
+    <section class="text-center">
+      <h2 class="text-h2 text-primary-900 mb-6">Bắt đầu</h2>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="typography-colors.html" class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors">
+          <i data-lucide="palette" class="w-5 h-5"></i>
+          Xem Style Guide
+        </a>
+        <a href="layout-framework.html" class="inline-flex items-center gap-2 px-6 py-3 border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-colors">
+          <i data-lucide="layout" class="w-5 h-5"></i>
+          Xem Layout
+        </a>
+        <a href="components-framework.html" class="inline-flex items-center gap-2 px-6 py-3 border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-colors">
+          <i data-lucide="component" class="w-5 h-5"></i>
+          Xem Components
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-8">
+    <div class="max-w-5xl mx-auto px-8 text-center">
+      <div class="flex items-center justify-center gap-2 mb-2">
+        <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+          <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
+        </div>
+        <span class="font-bold text-slate-900">K-Portal</span>
+      </div>
+      <p class="text-body-sm text-slate-500">Audit Intelligence Platform • Version 1.0</p>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

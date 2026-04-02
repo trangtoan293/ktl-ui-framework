@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-Portal | Data Display Framework</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 300: '#93C5FD', 400: '#60A5FA', 500: '#3B82D4', 600: '#2563B0', 700: '#1E4D8C', 800: '#153666', 900: '#0C2340' },
+            success: { DEFAULT: '#22C55E', light: '#F0FDF4', dark: '#166534' },
+            warning: { DEFAULT: '#F59E0B', light: '#FFFBEB', dark: '#92400E' },
+            danger: { DEFAULT: '#EF4444', light: '#FEF2F2', dark: '#991B1B' },
+            info: { DEFAULT: '#3B82F6', light: '#EFF6FF', dark: '#1E40AF' },
+            ai: { purple: { 100: '#EDE9FE', 200: '#DDD6FE', 300: '#C4B5FD', 400: '#A78BFA', 500: '#8B5CF6', 600: '#7C3AED', 700: '#6D28D9', 800: '#5B21B6', 900: '#4C1D95' }}
+          },
+          fontFamily: { sans: ['"Be Vietnam Pro"', 'system-ui', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    .table-row-hover:hover { background-color: #f8fafc; }
+    .sortable:hover { cursor: pointer; color: #2563B0; }
+    .sort-asc::after { content: '↑'; margin-left: 4px; }
+    .sort-desc::after { content: '↓'; margin-left: 4px; }
+    
+    .gauge-container { position: relative; }
+    /* gauge-value and gauge-label rely on Tailwind utilities now */
+    
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.5s ease-in-out;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    
+    .gauge-arc {
+      transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+      stroke-dasharray: 251.2;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
+  
+  <!-- Header -->
+  <header class="bg-primary-900 text-white py-6 px-8 sticky top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i data-lucide="table-2" class="w-8 h-8"></i>
+        <div>
+          <h1 class="text-2xl font-bold">Data Display</h1>
+          <p class="text-primary-200 text-sm">Tables, Pagination & Trust Score Gauge</p>
+        </div>
+      </div>
+      <a href="feedback-framework.html" class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        <span class="hidden sm:inline">Feedback</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-8 py-12 space-y-16">
+
+    <!-- ==================== DATA TABLE ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="table" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Data Table</h2>
+          <p class="text-body-md text-slate-500">Sortable, filterable data tables</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <!-- Table Header with Actions -->
+        <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+              <input type="text" placeholder="Tìm kiếm tài liệu..." class="pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-64">
+            </div>
+            <button class="flex items-center gap-2 px-3 py-2 border border-slate-300 rounded-lg text-sm text-slate-700 hover:bg-slate-50">
+              <i data-lucide="filter" class="w-4 h-4"></i>
+              Lọc
+            </button>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="flex items-center gap-2 px-3 py-2 bg-primary-600 text-white rounded-lg text-sm hover:bg-primary-700">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              Thêm mới
+            </button>
+            <button class="p-2 border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50">
+              <i data-lucide="download" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead class="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-3">
+                  <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500">
+                </th>
+                <th class="px-4 py-3 text-body-sm font-semibold text-slate-700 sortable">
+                  Tài liệu
+                  <i data-lucide="chevrons-up-down" class="w-4 h-4 inline-block ml-1 text-slate-400"></i>
+                </th>
+                <th class="px-4 py-3 text-body-sm font-semibold text-slate-700 sortable">
+                  Loại
+                  <i data-lucide="chevrons-up-down" class="w-4 h-4 inline-block ml-1 text-slate-400"></i>
+                </th>
+                <th class="px-4 py-3 text-body-sm font-semibold text-slate-700 sortable">
+                  Trạng thái
+                  <i data-lucide="chevrons-up-down" class="w-4 h-4 inline-block ml-1 text-slate-400"></i>
+                </th>
+                <th class="px-4 py-3 text-body-sm font-semibold text-slate-700 sortable">
+                  Người tạo
+                  <i data-lucide="chevrons-up-down" class="w-4 h-4 inline-block ml-1 text-slate-400"></i>
+                </th>
+                <th class="px-4 py-3 text-body-sm font-semibold text-slate-700 sortable">
+                  Ngày tạo
+                  <i data-lucide="chevrons-up-down" class="w-4 h-4 inline-block ml-1 text-slate-400"></i>
+                </th>
+                <th class="px-4 py-3 text-body-sm font-semibold text-slate-700 text-right">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <!-- Row 1 -->
+              <tr class="table-row-hover">
+                <td class="px-4 py-3">
+                  <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500">
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-danger/10 rounded-lg flex items-center justify-center">
+                      <i data-lucide="file-text" class="w-5 h-5 text-danger"></i>
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-slate-900">Báo cáo tài chính Q1/2024</p>
+                      <p class="text-xs text-slate-500">PDF • 2.4 MB</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs">Báo cáo</span>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/20 text-success-dark">
+                    <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                    Đã duyệt
+                  </span>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-primary-200 rounded-full flex items-center justify-center text-xs font-semibold text-primary-700">TT</div>
+                    <span class="text-sm text-slate-700">Trần Toàn</span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 text-sm text-slate-600">15/03/2024</td>
+                <td class="px-4 py-3 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors" title="Xem">
+                      <i data-lucide="eye" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors" title="Sửa">
+                      <i data-lucide="pencil" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors" title="Tải xuống">
+                      <i data-lucide="download" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors" title="Xóa">
+                      <i data-lucide="trash-2" class="w-4 h-4 text-danger"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 2 -->
+              <tr class="table-row-hover">
+                <td class="px-4 py-3">
+                  <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500">
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
+                      <i data-lucide="file-spreadsheet" class="w-5 h-5 text-success"></i>
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-slate-900">Dữ liệu kiểm toán 2024</p>
+                      <p class="text-xs text-slate-500">XLSX • 856 KB</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs">Dữ liệu</span>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning/20 text-warning-dark">
+                    <span class="w-1.5 h-1.5 rounded-full bg-warning"></span>
+                    Chờ duyệt
+                  </span>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-warning-200 rounded-full flex items-center justify-center text-xs font-semibold text-warning-700">LN</div>
+                    <span class="text-sm text-slate-700">Lê Nam</span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 text-sm text-slate-600">14/03/2024</td>
+                <td class="px-4 py-3 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="eye" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="pencil" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="download" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="trash-2" class="w-4 h-4 text-danger"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 3 -->
+              <tr class="table-row-hover">
+                <td class="px-4 py-3">
+                  <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500">
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-ai-purple-100 rounded-lg flex items-center justify-center">
+                      <i data-lucide="sparkles" class="w-5 h-5 text-ai-purple-600"></i>
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-slate-900">Phân tích AI - Báo cáo rủi ro</p>
+                      <p class="text-xs text-slate-500">AI Report • Generated</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center px-2 py-1 bg-ai-purple-100 text-ai-purple-700 rounded text-xs">AI</span>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-info/20 text-info-dark">
+                    <span class="w-1.5 h-1.5 rounded-full bg-info relative">
+                      <span class="absolute inset-0 rounded-full bg-info animate-ping"></span>
+                    </span>
+                    Đang xử lý
+                  </span>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-ai-purple-200 rounded-full flex items-center justify-center text-xs font-semibold text-ai-purple-700">AI</div>
+                    <span class="text-sm text-slate-700">GPT-4</span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 text-sm text-slate-600">14/03/2024</td>
+                <td class="px-4 py-3 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="eye" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="refresh-cw" class="w-4 h-4 text-ai-purple-600"></i>
+                    </button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="trash-2" class="w-4 h-4 text-danger"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 4 -->
+              <tr class="table-row-hover">
+                <td class="px-4 py-3">
+                  <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500">
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                      <i data-lucide="file-code" class="w-5 h-5 text-primary-600"></i>
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-slate-900">Quy định nội bộ 2024</p>
+                      <p class="text-xs text-slate-500">DOCX • 1.2 MB</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs">Quy định</span>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary-600"></span>
+                    Đã ban hành
+                  </span>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-success-200 rounded-full flex items-center justify-center text-xs font-semibold text-success-700">HT</div>
+                    <span class="text-sm text-slate-700">Hoàng Thịnh</span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 text-sm text-slate-600">10/03/2024</td>
+                <td class="px-4 py-3 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="eye" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="pencil" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="download" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="trash-2" class="w-4 h-4 text-danger"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 5 -->
+              <tr class="table-row-hover">
+                <td class="px-4 py-3">
+                  <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500">
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+                      <i data-lucide="file-archive" class="w-5 h-5 text-slate-500"></i>
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-slate-900">Hồ sơ kiểm toán 2023</p>
+                      <p class="text-xs text-slate-500">ZIP • 15.8 MB</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs">Archive</span>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+                    <i data-lucide="archive" class="w-3 h-3"></i>
+                    Đã lưu trữ
+                  </span>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-danger-200 rounded-full flex items-center justify-center text-xs font-semibold text-danger-700">MT</div>
+                    <span class="text-sm text-slate-700">Mai Trang</span>
+                  </div>
+                </td>
+                <td class="px-4 py-3 text-sm text-slate-600">05/03/2024</td>
+                <td class="px-4 py-3 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="eye" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="download" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="archive-restore" class="w-4 h-4 text-slate-500"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="p-4 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-2 text-body-sm text-slate-600">
+            <span>Hiển thị</span>
+            <select class="border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+              <option>10</option>
+              <option>20</option>
+              <option>50</option>
+            </select>
+            <span>của 256 kết quả</span>
+          </div>
+          
+          <div class="flex items-center gap-1">
+            <button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 disabled:opacity-50" disabled>
+              <i data-lucide="chevrons-left" class="w-4 h-4"></i>
+            </button>
+            <button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 disabled:opacity-50" disabled>
+              <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            </button>
+            <button class="px-3 py-1.5 bg-primary-600 text-white rounded-lg text-sm font-medium">1</button>
+            <button class="px-3 py-1.5 hover:bg-slate-100 rounded-lg text-sm text-slate-700">2</button>
+            <button class="px-3 py-1.5 hover:bg-slate-100 rounded-lg text-sm text-slate-700">3</button>
+            <span class="px-2 text-slate-400">...</span>
+            <button class="px-3 py-1.5 hover:bg-slate-100 rounded-lg text-sm text-slate-700">26</button>
+            <button class="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
+              <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+            <button class="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
+              <i data-lucide="chevrons-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TRUST SCORE GAUGE ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="gauge" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Trust Score Gauge</h2>
+          <p class="text-body-md text-slate-500">Semicircle gauge for confidence scores (0-100)</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- High Trust -->
+          <div class="text-center group">
+            <div class="relative w-48 mx-auto mb-2">
+              <svg viewBox="0 0 200 110" class="w-full h-auto overflow-visible">
+                <!-- Background arc -->
+                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e2e8f0" stroke-width="16" stroke-linecap="round"/>
+                <!-- Value arc (radius 80, length = 251.2), 94% => offset 15.07 -->
+                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#22C55E" stroke-width="16" stroke-linecap="round" class="gauge-arc drop-shadow-md" stroke-dashoffset="15.07"/>
+                
+                <!-- Decorator dot -->
+                <circle cx="100" cy="100" r="3" fill="#cbd5e1" />
+              </svg>
+              <!-- Absolute Center Label -->
+              <div class="absolute inset-0 flex flex-col items-center justify-end pb-4">
+                <div class="text-4xl font-bold text-slate-800 leading-none group-hover:scale-110 transition-transform">94<span class="text-xl text-slate-400 font-medium ml-0.5">%</span></div>
+              </div>
+            </div>
+            <div class="text-sm font-medium text-slate-500 mb-3">High Trust</div>
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-success/10 text-success-dark rounded-full text-sm font-medium border border-success/20">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              Độ tin cậy tuyệt đối
+            </div>
+          </div>
+
+          <!-- Medium Trust -->
+          <div class="text-center group">
+            <div class="relative w-48 mx-auto mb-2">
+              <svg viewBox="0 0 200 110" class="w-full h-auto overflow-visible">
+                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e2e8f0" stroke-width="16" stroke-linecap="round"/>
+                <!-- 65% => offset 87.92 -->
+                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#F59E0B" stroke-width="16" stroke-linecap="round" class="gauge-arc drop-shadow-md" stroke-dashoffset="87.92"/>
+                <circle cx="100" cy="100" r="3" fill="#cbd5e1" />
+              </svg>
+              <!-- Absolute Center Label -->
+              <div class="absolute inset-0 flex flex-col items-center justify-end pb-4">
+                <div class="text-4xl font-bold text-slate-800 leading-none group-hover:scale-110 transition-transform">65<span class="text-xl text-slate-400 font-medium ml-0.5">%</span></div>
+              </div>
+            </div>
+            <div class="text-sm font-medium text-slate-500 mb-3">Medium Trust</div>
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-warning/10 text-warning-dark rounded-full text-sm font-medium border border-warning/20">
+              <i data-lucide="alert-circle" class="w-4 h-4"></i>
+              Mức độ bình thường
+            </div>
+          </div>
+
+          <!-- Low Trust -->
+          <div class="text-center group">
+            <div class="relative w-48 mx-auto mb-2">
+              <svg viewBox="0 0 200 110" class="w-full h-auto overflow-visible">
+                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e2e8f0" stroke-width="16" stroke-linecap="round"/>
+                <!-- 28% => offset 180.86 -->
+                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#EF4444" stroke-width="16" stroke-linecap="round" class="gauge-arc drop-shadow-md" stroke-dashoffset="180.86"/>
+                <circle cx="100" cy="100" r="3" fill="#cbd5e1" />
+              </svg>
+              <!-- Absolute Center Label -->
+              <div class="absolute inset-0 flex flex-col items-center justify-end pb-4">
+                <div class="text-4xl font-bold text-slate-800 leading-none group-hover:scale-110 transition-transform">28<span class="text-xl text-slate-400 font-medium ml-0.5">%</span></div>
+              </div>
+            </div>
+            <div class="text-sm font-medium text-slate-500 mb-3">Low Trust</div>
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-danger/10 text-danger-dark rounded-full text-sm font-medium border border-danger/20">
+              <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+              Rủi ro rất cao
+            </div>
+          </div>
+        </div>
+
+        <!-- Circular Progress Alternative -->
+        <div class="mt-12 pt-8 border-t border-slate-200">
+          <h3 class="text-h3 text-primary-900 mb-6 text-center">Circular Progress</h3>
+          <div class="flex flex-wrap justify-center gap-12">
+            
+            <!-- Circle 1 -->
+            <div class="relative w-32 h-32">
+              <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#e2e8f0" stroke-width="8"/>
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#22C55E" stroke-width="8" stroke-linecap="round"
+                  stroke-dasharray="283" stroke-dashoffset="17" class="progress-ring-circle"/>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-2xl font-bold text-slate-900">94%</span>
+                <span class="text-xs text-slate-500">Accuracy</span>
+              </div>
+            </div>
+
+            <!-- Circle 2 -->
+            <div class="relative w-32 h-32">
+              <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#e2e8f0" stroke-width="8"/>
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"
+                  stroke-dasharray="283" stroke-dashoffset="85" class="progress-ring-circle"/>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-2xl font-bold text-slate-900">70%</span>
+                <span class="text-xs text-slate-500">Complete</span>
+              </div>
+            </div>
+
+            <!-- Circle 3 -->
+            <div class="relative w-32 h-32">
+              <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#e2e8f0" stroke-width="8"/>
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#7C3AED" stroke-width="8" stroke-linecap="round"
+                  stroke-dasharray="283" stroke-dashoffset="198" class="progress-ring-circle"/>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-2xl font-bold text-ai-purple-600">30%</span>
+                <span class="text-xs text-ai-purple-500">AI Process</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PAGINATION ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="pagination" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Pagination</h2>
+          <p class="text-body-md text-slate-500">Various pagination patterns</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div class="space-y-8">
+          
+          <!-- Simple Pagination -->
+          <div>
+            <p class="text-body-sm text-slate-500 mb-3">Simple</p>
+            <div class="flex items-center gap-1">
+              <button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 disabled:opacity-50" disabled>
+                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+              </button>
+              <button class="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium">1</button>
+              <button class="px-4 py-2 hover:bg-slate-100 rounded-lg text-sm text-slate-700">2</button>
+              <button class="px-4 py-2 hover:bg-slate-100 rounded-lg text-sm text-slate-700">3</button>
+              <button class="px-4 py-2 hover:bg-slate-100 rounded-lg text-sm text-slate-700">4</button>
+              <button class="px-4 py-2 hover:bg-slate-100 rounded-lg text-sm text-slate-700">5</button>
+              <button class="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
+                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- With Info -->
+          <div>
+            <p class="text-body-sm text-slate-500 mb-3">With Page Info</p>
+            <div class="flex items-center justify-between">
+              <p class="text-body-sm text-slate-600">Hiển thị 1-10 của 256 kết quả</p>
+              <div class="flex items-center gap-1">
+                <button class="px-3 py-2 hover:bg-slate-100 rounded-lg text-sm text-slate-700">Previous</button>
+                <button class="px-3 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium">1</button>
+                <button class="px-3 py-2 hover:bg-slate-100 rounded-lg text-sm text-slate-700">2</button>
+                <button class="px-3 py-2 hover:bg-slate-100 rounded-lg text-sm text-slate-700">3</button>
+                <span class="px-2 text-slate-400">...</span>
+                <button class="px-3 py-2 hover:bg-slate-100 rounded-lg text-sm text-slate-700">26</button>
+                <button class="px-3 py-2 hover:bg-slate-100 rounded-lg text-sm text-slate-700">Next</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Compact -->
+          <div>
+            <p class="text-body-sm text-slate-500 mb-3">Compact (Mobile)</p>
+            <div class="flex items-center justify-between bg-slate-50 rounded-lg p-2">
+              <button class="flex items-center gap-1 px-3 py-2 text-slate-600 disabled:opacity-50" disabled>
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                <span class="text-sm">Trước</span>
+              </button>
+              <span class="text-sm font-medium text-slate-700">Trang 1/26</span>
+              <button class="flex items-center gap-1 px-3 py-2 text-slate-600">
+                <span class="text-sm">Sau</span>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- With Page Size -->
+          <div>
+            <p class="text-body-sm text-slate-500 mb-3">With Page Size Selector</p>
+            <div class="flex items-center gap-4">
+              <div class="flex items-center gap-2">
+                <span class="text-body-sm text-slate-600">Hiển thị</span>
+                <select class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                  <option>10</option>
+                  <option>25</option>
+                  <option>50</option>
+                  <option>100</option>
+                </select>
+                <span class="text-body-sm text-slate-600">/ trang</span>
+              </div>
+              <div class="h-6 w-px bg-slate-200"></div>
+              <div class="flex items-center gap-1">
+                <button class="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
+                  <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                </button>
+                <span class="px-3 py-2 text-sm text-slate-700">1 / 26</span>
+                <button class="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
+                  <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== EMPTY STATES ==================== -->
+    <section>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="inbox" class="w-5 h-5 text-primary-600"></i>
+        </div>
+        <div>
+          <h2 class="text-h2 text-primary-900">Empty States</h2>
+          <p class="text-body-md text-slate-500">No data and initial states</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Empty Documents -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center">
+          <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="folder-open" class="w-8 h-8 text-slate-400"></i>
+          </div>
+          <h3 class="text-h3 text-slate-900 mb-2">Chưa có tài liệu</h3>
+          <p class="text-body-md text-slate-500 mb-4">Bạn chưa upload tài liệu nào. Hãy bắt đầu ngay!</p>
+          <button class="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Upload tài liệu
+          </button>
+        </div>
+
+        <!-- No Search Results -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center">
+          <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="search-x" class="w-8 h-8 text-slate-400"></i>
+          </div>
+          <h3 class="text-h3 text-slate-900 mb-2">Không tìm thấy</h3>
+          <p class="text-body-md text-slate-500 mb-4">Không có kết quả phù hợp với từ khóa tìm kiếm</p>
+          <button class="inline-flex items-center gap-2 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            Xóa bộ lọc
+          </button>
+        </div>
+
+        <!-- First Time User -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center">
+          <div class="w-16 h-16 bg-ai-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="sparkles" class="w-8 h-8 text-ai-purple-600"></i>
+          </div>
+          <h3 class="text-h3 text-slate-900 mb-2">Tạo Workspace đầu tiên</h3>
+          <p class="text-body-md text-slate-500 mb-4">Bắt đầu bằng cách tạo workspace để phân tích tài liệu với AI</p>
+          <button class="inline-flex items-center gap-2 px-4 py-2 bg-ai-purple-600 text-white rounded-lg text-sm font-medium hover:bg-ai-purple-700">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Tạo Workspace
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Navigation -->
+  <footer class="bg-white border-t border-slate-200 py-8 px-8">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <p class="text-body-sm text-slate-500">K-Portal Framework v1.0</p>
+      <div class="flex gap-4">
+        <a href="typography-colors.html" class="text-body-sm text-primary-600 hover:text-primary-700">Colors</a>
+        <a href="layout-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Layout</a>
+        <a href="components-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Components</a>
+        <a href="forms-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Forms</a>
+        <a href="feedback-framework.html" class="text-body-sm text-primary-600 hover:text-primary-700">Feedback</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
